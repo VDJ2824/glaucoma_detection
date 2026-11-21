@@ -1,0 +1,65 @@
+# Python-generated caches (anywhere, including src/ and tests/)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+
+# Real environment secrets; share templates at any directory depth
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# IMPORTANT: anchor dataset rules to the project root.
+# A bare data/ rule would also hide the Python package src/glaucoma/data/.
+# Keep the root dataset README, but never track actual datasets/annotations.
+/data/*
+!/data/README.md
+
+# Derived outputs; retain only the documented placeholders
+/artifacts/*
+!/artifacts/README.md
+/reports/generated/*
+!/reports/generated/.gitkeep
+/frontend/public/models/*
+!/frontend/public/models/README.md
+/checkpoints/
+/saved_models/
+
+# Model weights / converted binaries, even outside generated directories
+*.keras
+*.h5
+*.hdf5
+*.tflite
+*.onnx
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+*.ckpt.*
+*.index
+*.data-?????-of-?????
+*.bin
+saved_model.pb
+
+# Notebook output checkpoints and logs
+.ipynb_checkpoints/
+*.log
+
+# Frontend dependencies / generated output
+node_modules/
+coverage/
+
+# Editors / OS
+.DS_Store
+.vscode/
+.idea/

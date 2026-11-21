@@ -93,7 +93,7 @@ This displays a static project placeholder. `npm run build` will build the front
 
 ## GitHub repository setup
 
-Create an empty repository on GitHub without an initial README, then run these commands in your local project folder after reviewing the staged files. Replace the URL with your repository. Check `git rev-parse --show-toplevel` first: this workspace currently inherits a Git repository from a parent directory. Run `git init` **inside `glaucoma_detection`** to create an independent project repository; do not rename branches or add remotes in the parent repository. Skip initialization only if the reported Git root is already this exact project directory, and inspect `git remote -v` before adding a remote.
+Create an empty repository on GitHub without an initial README, then run these commands in your local project folder after reviewing the staged files. Replace the URL with your repository. Check `git rev-parse --show-toplevel` first. If it reports a parent directory, run `git init` **inside `glaucoma_detection`** to create an independent project repository; do not rename branches or add remotes in the parent repository. Skip initialization only if the reported Git root is already this exact project directory, and inspect `git remote -v` before adding a remote.
 
 ```bash
 git init
