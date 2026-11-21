@@ -1,0 +1,12 @@
+# Research / CPU development. Use an isolated Python 3.10–3.12 environment.
+# TensorFlow GPU setup depends on the Colab/Kaggle runtime.
+tensorflow>=2.16,<2.19
+opencv-python-headless>=4.9,<5
+numpy>=1.26,<2.1
+pandas>=2.2,<3
+scikit-learn>=1.4,<2
+matplotlib>=3.8,<4
+seaborn>=0.13,<0.14
+PyYAML>=6,<7
+python-dotenv>=1,<2
+-e .

@@ -1,0 +1,65 @@
+# Single source of truth. project_root is relative to this file; all other paths use that root.
+project_root: ..
+seed: 42
+model:
+  selected: mobilenet_v2
+  weights: imagenet
+  core: [resnet50, mobilenet_v2, efficientnet_b0]
+  optional_baselines: [vgg16, vgg19]
+  input_shape: [224, 224, 3]
+  head: {pooling: global_average, dropout: 0.2, units: 1, activation: sigmoid}
+datasets:
+  selected: acrima
+  acrima:
+    root: data/raw/ACRIMA
+    # Exact folder names only. Change these to match your labeled download.
+    class_directories: {non_glaucoma: 0, glaucoma: 1}
+    annotations_csv: null
+  rim_one_dl: {root: data/raw/RIM_ONE_DL, supported: false}
+  drishti_gs: {root: data/raw/DRISHTI_GS, supported: false}
+  refuge: {root: data/raw/REFUGE, supported: false}
+  airogs: {root: data/raw/AIROGS, supported: false}
+  justraigs: {root: data/raw/JustRAIGS, supported: false}
+metadata:
+  output: data/processed/acrima_metadata.csv
+  validation_output: data/processed/acrima_validation.csv
+  duplicate_policy: drop_identical # keep one only within the same label/group/split
+split:
+  mode: generated # or official: requires a split on every annotation
+  ratios: {train: 0.70, validation: 0.15, test: 0.15}
+  stratify: true
+  patient_level: true
+preprocessing:
+  color: RGB
+  resize: letterbox
+  pad_value: 0
+  normalization: model_specific
+  clahe: {enabled: false, clip_limit: 2.0, tile_grid_size: [8, 8]}
+augmentation:
+  enabled: true
+  horizontal_flip_probability: 0.5
+  rotation_degrees: 10
+  brightness_delta: 0.1
+training:
+  batch_size: 16
+  stage1: {epochs: 10, learning_rate: 0.001, backbone_trainable: false}
+  stage2: {epochs: 20, learning_rate: 0.0001, unfreeze_last_n_layers: 20, freeze_batch_normalization: true}
+  early_stopping: {monitor: val_loss, mode: min, patience: 5, min_delta: 0.0001, restore_best_weights: true}
+checkpoints:
+  core: artifacts/checkpoints/core
+  baselines: artifacts/checkpoints/baselines
+ensemble:
+  members: [resnet50, mobilenet_v2, efficientnet_b0]
+  weights: null # choose on validation data only
+  heatmap_fusion: [equal, weighted]
+  primary_visualization: ensemble_gradcam
+export:
+  members: [resnet50, mobilenet_v2, efficientnet_b0]
+  format: tfjs_graph_model
+  output_root: frontend/public/models
+reporting:
+  consent_required: true
+  images_allowed: false
+  identifiers_allowed: false
+  pdf_generation: browser_local
+  gemini_transport: flask_backend_only

@@ -1,0 +1,5 @@
+# Report API can be installed without TensorFlow or the research dependencies.
+Flask>=3.0,<4
+flask-cors>=4,<7
+google-genai>=1,<2
+python-dotenv>=1,<2

@@ -1,0 +1,3 @@
+# Use a separate conversion environment; validate exact versions during export.
+-r requirements.txt
+tensorflowjs>=4.20,<5
