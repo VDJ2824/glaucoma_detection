@@ -85,6 +85,7 @@ def test_end_to_end_originals_unchanged(cfg,tmp_path,image_factory):
     root=tmp_path/'raw'
     originals={p:p.read_bytes() for p in root.rglob('*.png')}
     cfg['datasets']['acrima']['root']=str(root)
+    cfg['datasets']['acrima']['label_mode']='folders'
     cfg['metadata']['output']=str(tmp_path/'derived/metadata.csv')
     cfg['metadata']['validation_output']=str(tmp_path/'derived/issues.csv')
     # Exact duplicate removed before splitting; not another sample.
@@ -102,9 +103,77 @@ def test_validation_failure_does_not_write_metadata(cfg,tmp_path,image_factory):
     image_factory('raw/non_glaucoma/a.png')
     bad=tmp_path/'raw/glaucoma/b.png';bad.parent.mkdir();bad.write_bytes(b'corrupt')
     cfg['datasets']['acrima']['root']=str(tmp_path/'raw')
+    cfg['datasets']['acrima']['label_mode']='folders'
     cfg['metadata']['output']=str(tmp_path/'output.csv')
     cfg['metadata']['validation_output']=str(tmp_path/'issues.csv')
     with pytest.raises(ValueError,match='validation failed'):prepare_dataset(cfg)
     assert not (tmp_path/'output.csv').exists()
     assert 'corrupt_image' in pd.read_csv(tmp_path/'issues.csv').code.tolist()
     assert bad.read_bytes()==b'corrupt'
+
+
+@pytest.mark.parametrize('name,label', [
+    ('Im310_g_ACRIMA.jpg',1), ('Im304_ACRIMA.jpg',0),
+    ('im001_G_acrima.JPG',1), ('IM999_ACRIMA.JpG',0),
+])
+def test_filename_labels_case_insensitive(tmp_path,image_factory,name,label):
+    image=image_factory(name)
+    before=image.read_bytes()
+    data=AcrimaAdapter(tmp_path,label_mode='filename').discover()
+    assert data.iloc[0].label==label
+    assert data.iloc[0].image_id==name and data.iloc[0].image_path==str(image)
+    assert data.patient_id.eq('').all() and data.split.eq('').all()
+    assert image.read_bytes()==before
+
+
+@pytest.mark.parametrize('name', ['Im310_ACRIMA_g.jpg','Im_g_ACRIMA.jpg','Im310_x_ACRIMA.jpg',
+                                  'Im310_g_ACRIMA_copy.jpg','Im304_ACRIMA.png',
+                                  'Im304_ACRIMA.jpeg','random.jpg','Im304_ACRIMA.jpg.bak',
+                                  'Im304_ACRIMA.jpg\n'])
+def test_filename_mode_rejects_unexpected_names(tmp_path,name):
+    (tmp_path/name).write_bytes(b'not decoded by discovery')
+    with pytest.raises(ValueError,match='Unexpected entries'):
+        AcrimaAdapter(tmp_path,label_mode='filename').discover()
+
+
+def test_filename_mode_rejects_nested_or_empty_directory(tmp_path):
+    with pytest.raises(ValueError,match='No canonical'):AcrimaAdapter(tmp_path,label_mode='filename').discover()
+    (tmp_path/'nested').mkdir()
+    with pytest.raises(ValueError,match='Unexpected entries'):AcrimaAdapter(tmp_path,label_mode='filename').discover()
+
+
+def test_filename_mode_rejects_external_symlinks(tmp_path,image_factory):
+    image=image_factory('outside.jpg')
+    root=tmp_path/'flat';root.mkdir()
+    (root/'Im001_ACRIMA.jpg').symlink_to(image)
+    with pytest.raises(ValueError,match='Unexpected'):AcrimaAdapter(root,label_mode='filename').discover()
+
+
+def test_configured_filename_mode(cfg,tmp_path,image_factory):
+    image_factory('Im310_g_ACRIMA.jpg');image_factory('Im304_ACRIMA.jpg',seed=2)
+    cfg['datasets']['acrima']['root']=str(tmp_path)
+    cfg['datasets']['acrima']['label_mode']='filename'
+    assert create_adapter(cfg).discover().label.value_counts().to_dict()=={0:1,1:1}
+
+
+@pytest.mark.parametrize('kwargs', [dict(label_mode='unknown'),dict(label_mode='csv'),
+    dict(label_mode='filename',annotations_csv='annotations.csv'),dict(label_mode='folders',annotations_csv='annotations.csv')])
+def test_label_modes_reject_ambiguous_or_invalid_settings(tmp_path,kwargs):
+    with pytest.raises(ValueError):AcrimaAdapter(tmp_path,**kwargs)
+
+
+def test_explicit_csv_mode_remains_the_annotation_authority(cfg,tmp_path,image_factory):
+    path=image_factory('Im310_g_ACRIMA.jpg')
+    ann=tmp_path/'annotations.csv'
+    pd.DataFrame([dict(image_id='image-only-id',image_path=path.name,label=0,patient_id='verified-key')]).to_csv(ann,index=False)
+    cfg['datasets']['acrima'].update(root=str(tmp_path),label_mode='csv',annotations_csv=str(ann))
+    row=create_adapter(cfg).discover().iloc[0]
+    assert row.label=='0' and row.patient_id=='verified-key'
+
+
+def test_legacy_config_without_mode_still_supports_folders(cfg,tmp_path,image_factory):
+    image_factory('normal/example.png')
+    image_factory('positive/example.png',seed=2)
+    cfg['datasets']['acrima'].pop('label_mode',None)
+    cfg['datasets']['acrima'].update(root=str(tmp_path),class_directories={'normal':0,'positive':1})
+    assert create_adapter(cfg).discover().label.tolist()==[0,1]

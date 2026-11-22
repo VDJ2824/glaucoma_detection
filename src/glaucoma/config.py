@@ -65,6 +65,9 @@ def load_config(path='configs/project.yaml'):
         spec['root'] = resolve(dataset_root if dataset_root and name == cfg['datasets']['selected'] else spec['root'])
         if spec.get('annotations_csv'):
             spec['annotations_csv'] = resolve(spec['annotations_csv'])
+    acrima = cfg['datasets'].get('acrima', {})
+    if acrima.get('label_mode', 'csv' if acrima.get('annotations_csv') else 'folders') not in ('filename', 'folders', 'csv'):
+        raise ValueError('Unknown ACRIMA label mode')
     if cfg['datasets']['selected'] not in cfg['datasets']:
         raise ValueError('Unknown dataset')
     for key in ('output', 'validation_output'):

@@ -1,2 +1,4 @@
 -r requirements-data.txt
 pytest>=8,<10
+# Exercise the notebook exploration visualizations with synthetic fixtures.
+matplotlib>=3.8,<4

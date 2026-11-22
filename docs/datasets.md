@@ -1,33 +1,64 @@
 # Dataset preparation and ACRIMA download organization
 
-## Organizing the files you download tomorrow
+## Organizing your downloaded images
 
 Keep the downloaded archive and extracted original images unchanged. Do not rename/move original images solely to fit this example: set the configured root and folder mapping to match your extraction instead. No command in this project downloads datasets, edits originals, creates labels or fabricates patient IDs.
 
-The simplest supported **example layout** is:
+### Filename label mode and provenance
+
+The [original dataset paper, Diaz-Pinto et al. (2019)](https://doi.org/10.1186/s12938-019-0649-y) identifies ACRIMA as a glaucoma-labelled dataset and confirms **705 images: 396 glaucomatous and 309 normal**. These totals match the user's Colab inspection. This establishes the class meanings and published counts, not patient identity.
+
+The supplied flat-release naming convention is `Im<number>_g_ACRIMA.jpg` for glaucoma and `Im<number>_ACRIMA.jpg` for normal. The [OpenMedLab ACRIMA catalogue](https://github.com/openmedlab/Awesome-Medical-Dataset/blob/main/resources/ACRIMA.md) independently describes the same filename stems. Verification on 22 November 2026: the original paper was accessible, but the original Figshare shared release returned HTTP 403 and the original project's `Characteristics.md` was empty. Therefore, **the original archive's filename labels were not independently audited here**: filename support implements the user's inspected release convention, corroborated by the catalogue. Aggregate counts alone do not validate every image's annotation. Keep the original release provenance and use a verified annotation CSV for renamed or differently labelled copies.
+
+`configs/project.yaml` now defaults to explicit filename mode. Point `root` (or exported `DATASET_ROOT`) directly at the **flat image directory**, not a wrapper containing `Images/`:
 
 ```text
 data/raw/ACRIMA/
-  non_glaucoma/
-    original-image-name-1.jpg
-    ...
-  glaucoma/
-    original-image-name-2.jpg
-    ...
+  Im310_g_ACRIMA.jpg
+  Im304_ACRIMA.jpg
+  ...
 ```
-
-These folder names are project conventions, not a claim about ACRIMA's archive layout. If the downloaded folders have other names, edit `datasets.acrima.class_directories` in `configs/project.yaml`, mapping each exact relative folder name to `0` (non-glaucoma) or `1` (glaucoma). Verify these meanings against the download's glaucoma annotations/documentation. Never infer labels from file numbering or treat diabetic retinopathy labels as glaucoma labels. Folder discovery recursively includes JPG/JPEG, PNG, BMP, TIF and TIFF files. Non-image files are ignored; an image file with a supported extension that cannot decode is an error. Folders not listed in the mapping are not scanned.
-
-If your download has a single flat image folder or separate annotations, use a manually verified annotation CSV instead. Do not copy images into inferred class folders:
 
 ```yaml
 datasets:
   selected: acrima
   acrima:
     root: data/raw/ACRIMA
+    label_mode: filename
+    annotations_csv: null
+```
+
+The adapter uses a **full, case-insensitive match**, equivalent to `Im[0-9]+(_g)?_ACRIMA\.jpg`. Label 1 requires the optional `_g` group; label 0 requires the complete normal pattern. It never labels arbitrary files normal merely because `_g_` is absent. Examples such as `im310_G_acrima.JPG` are accepted. Extra suffixes, unknown disease markers, `.png`/`.jpeg` copies, unrelated files, sidecars and nested directories are explicitly rejected in this strict flat mode. Keep ancillary files outside the configured image directory without changing original images. Empty directories and symlinks escaping the dataset root also fail. Image numbers remain image IDs only; `patient_id` and `split` stay blank. No filenames are renamed, moved or edited. Discovery assigns labels without decoding; existing validation subsequently detects unreadable JPEGs.
+
+### Existing folder and CSV modes
+
+For an existing labelled folder layout, set `label_mode: folders` and map exact relative directory names to glaucoma labels. Folder mode remains recursive and supports JPG/JPEG, PNG, BMP, TIF and TIFF. Files outside mapped folders are not scanned. A typical **project convention**, not the original archive layout, is:
+
+```yaml
+datasets:
+  selected: acrima
+  acrima:
+    root: data/raw/ACRIMA
+    label_mode: folders
+    class_directories: {non_glaucoma: 0, glaucoma: 1}
+    annotations_csv: null
+```
+
+Never infer labels from numeric ordering or treat diabetic-retinopathy labels as glaucoma labels. Do not reorganize original files to satisfy a particular mode.
+
+For verified supplemental annotations or noncanonical filenames, select CSV mode:
+
+```yaml
+datasets:
+  selected: acrima
+  acrima:
+    root: data/raw/ACRIMA
+    label_mode: csv
     class_directories: null
     annotations_csv: data/annotations/acrima.csv
 ```
+
+Modes are explicit and never fall back when discovery fails. CSV mode requires an annotation path; other modes reject a nonempty `annotations_csv` to avoid competing label sources. Old configuration without `label_mode` and existing direct `AcrimaAdapter(...)` callers retain the previous behavior: CSV when an annotation path is provided, folders otherwise.
 
 Example annotation format (illustrative rows only, not actual ACRIMA labels):
 
@@ -41,6 +72,17 @@ original-name-2,images/original-name-2.jpg,1,,
 
 The adapter standardizes `dataset_name` to `acrima`. It does not parse arbitrary external annotation formats: translate a verified annotation file into the documented schema while retaining its source/provenance separately. Do not include actual private patient identifiers in source control; metadata CSVs can contain sensitive paths and grouping keys and belong under ignored `data/`.
 
+## Read-only exploration in Notebook 01
+
+After refreshing notebook 00's saved session for the selected label mode and actual dataset path, run `01_dataset_exploration.ipynb`. It calls `glaucoma.data.exploration.explore_dataset` to discover originals and reuse `validate_metadata`. It includes:
+
+- Original class counts/percentages and a distribution chart, keeping duplicates in exploratory counts.
+- Original decoded width, height and aspect-ratio statistics (count, mean, standard deviation, min, quartiles and max).
+- Seeded per-class RGB sample previews, excluding unreadable/out-of-root files and showing missing samples honestly.
+- Exact decoded-pixel duplicate, conflicting annotation, corruption and invalid-path findings without deleting rows or files.
+
+Validation errors are displayed for review, not silently repaired. Samples and dimension measurements include valid duplicate originals; audit findings distinguish duplicates. Near-duplicate limitations of pixel hashing still apply. No split assignments, augmentation, training or image writes occur. Analytical CSV export is optional and disabled by default; keep notebook outputs/private paths and image previews out of Git. Reusable plotting helpers import Matplotlib only when called; it is included in research and development dependencies.
+
 ## Install and run locally
 
 From the repository root:
@@ -49,13 +91,14 @@ From the repository root:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-dev.txt
-python scripts/prepare_dataset.py --config configs/project.yaml
 python -m pytest -q
 ```
 
+For an exploration-only workflow, run notebooks 00 and 01. Notebook 02 and the preparation command assign splits and belong to a separate opt-in preparation phase. The command below is for that later phase.
+
 TensorFlow and GPU support are not needed for dataset preparation or tests. `requirements-data.txt` installs only runtime data dependencies; `requirements-dev.txt` also adds pytest. Model training remains disabled.
 
-Paths in YAML resolve against `project_root` relative to the YAML file. The default `project_root: ..` points to the repository. The CLI also accepts an exported `PROJECT_CONFIG` as its default config path. Exported `DATASET_ROOT` overrides the selected dataset's root, while `ARTIFACTS_ROOT` overrides checkpoint locations. `.env` is not automatically loaded by this CLI. Example:
+Paths in YAML resolve against `project_root` relative to the YAML file. The default `project_root: ..` points to the repository. The preparation CLI also accepts an exported `PROJECT_CONFIG` as its default config path. Exported `DATASET_ROOT` overrides the selected dataset's root, while `ARTIFACTS_ROOT` overrides checkpoint locations. `.env` is not automatically loaded by this CLI. Example:
 
 ```bash
 export DATASET_ROOT=/absolute/path/to/your/ACRIMA

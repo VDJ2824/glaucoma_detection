@@ -1,11 +1,11 @@
 # Colab and Kaggle notebooks
 
-These notebooks orchestrate `src/glaucoma` modules. Dataset tools and the environment setup are implemented; training, evaluation, ensemble, Grad-CAM and conversion remain documented scaffolds. No notebook initiates training or dataset downloads. The preparation call in 02 is disabled until you explicitly enable it.
+These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exploration (01) and environment setup are implemented; training, evaluation, ensemble, Grad-CAM and conversion remain documented scaffolds. No notebook initiates training or dataset downloads. Notebook 01 now performs read-only exploration when run; it requires an existing dataset. The preparation call in 02 is disabled until you explicitly enable it.
 
 | Notebook | Purpose |
 | --- | --- |
 | `00_environment_setup.ipynb` | Mount Drive on Colab; optionally clone/install; verify TensorFlow/GPU; save persistent session configuration |
-| `01_dataset_exploration.ipynb` | Review source labels, original images, available patient keys and duplicates |
+| `01_dataset_exploration.ipynb` | Implemented class/dimension summaries, RGB sample plots and duplicate/corruption checks |
 | `02_dataset_preparation.ipynb` | Opt-in shared validation, deduplication, split preparation and preprocessing inspection |
 | `03_individual_model_training.ipynb` | Future independent two-stage training of one selected model |
 | `04_model_evaluation.ipynb` | Future validation analysis and final held-out evaluation |

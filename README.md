@@ -4,7 +4,7 @@ A modular B.Tech CSE major-project scaffold for a lightweight, explainable, priv
 
 **Current status:** configuration and ACRIMA dataset discovery, validation, deduplication, splitting, preprocessing and training-only augmentation are implemented and unit tested. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Training, inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
 
-Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For data work alone, install `requirements-dev.txt` and run `python scripts/prepare_dataset.py --config configs/project.yaml` after placing your download and confirming the label mapping. Run `python -m pytest -q` for synthetic-data tests.
+Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For read-only exploration, install `requirements-dev.txt`, confirm the selected filename/folder/CSV label mode, refresh notebook 00 and run notebook 01. The preparation command is a separate opt-in step that assigns splits; leave it for the preparation phase. Run `python -m pytest -q` for synthetic-data tests.
 
 This is experimental research, not a medical device or a clinical diagnosis. Model scores are not established clinical probabilities. The term “lightweight” is a project goal: the memory, latency and download cost of all three core models must be measured on target devices.
 
@@ -127,7 +127,7 @@ Notebook 00 skips Colab Drive mounting on Kaggle and defaults outputs to `/kaggl
 
 ## Dataset folder organization
 
-Keep original downloads and filenames unchanged. The following is an **example**, not an assumption about the archive you receive:
+Keep original downloads and filenames unchanged. The configuration defaults to the inspected flat ACRIMA release: point its root at the directory holding `Im<number>_g_ACRIMA.jpg` (label 1) and `Im<number>_ACRIMA.jpg` (label 0). Matching is case-insensitive and unexpected entries are rejected. For the folder layout below, explicitly select `label_mode: folders`; for supplemental annotations select `label_mode: csv`. See the provenance details in `docs/datasets.md`. The following is an alternative **folder-mode example**:
 
 ```text
 Google Drive/MyDrive/glaucoma_project/
@@ -145,14 +145,14 @@ Google Drive/MyDrive/glaucoma_project/
     environment/
 ```
 
-If the original folders differ, change `datasets.acrima.class_directories`; do not reorganize originals just for the example. For flat image folders, provide a verified annotation CSV. Paths in that CSV are relative to the configured ACRIMA root. Missing patient IDs remain blank; unavailable glaucoma labels are errors. Other datasets have reserved configuration only. See [the complete ACRIMA guide](docs/datasets.md).
+In folder mode, if the original folders differ, change `datasets.acrima.class_directories`; do not reorganize originals just for the example. For noncanonical flat filenames, provide a verified annotation CSV. Paths in that CSV are relative to the configured ACRIMA root. Missing patient IDs remain blank; unavailable glaucoma labels are errors. Other datasets have reserved configuration only. See [the complete ACRIMA guide](docs/datasets.md).
 
 ## Recommended notebook execution order
 
 | Notebook | Purpose and status |
 | --- | --- |
 | `00_environment_setup.ipynb` | Implemented platform setup, diagnostics and persistent output configuration |
-| `01_dataset_exploration.ipynb` | Scaffold for original-label, class and image review |
+| `01_dataset_exploration.ipynb` | Implemented read-only class/dimension analysis, samples and integrity checks |
 | `02_dataset_preparation.ipynb` | Documented shared dataset pipeline; processing explicitly opt-in |
 | `03_individual_model_training.ipynb` | Scaffold for independent two-stage training |
 | `04_model_evaluation.ipynb` | Scaffold for validation analysis and final held-out metrics |

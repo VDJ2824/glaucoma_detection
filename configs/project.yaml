@@ -12,7 +12,9 @@ datasets:
   selected: acrima
   acrima:
     root: data/raw/ACRIMA
-    # Exact folder names only. Change these to match your labeled download.
+    # Point root directly to the flat directory containing Im<number>[_g]_ACRIMA.jpg.
+    label_mode: filename # filename, folders, or csv
+    # Used only in folders mode; retained for existing labeled folder layouts.
     class_directories: {non_glaucoma: 0, glaucoma: 1}
     annotations_csv: null
   rim_one_dl: {root: data/raw/RIM_ONE_DL, supported: false}

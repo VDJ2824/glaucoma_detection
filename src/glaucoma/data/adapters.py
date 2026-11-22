@@ -1,6 +1,7 @@
 """Dataset adapters produce original-image metadata, never augmented samples."""
 from abc import ABC, abstractmethod
 from pathlib import Path
+import re
 import pandas as pd
 
 COLUMNS = ['image_id', 'image_path', 'dataset_name', 'patient_id', 'label', 'split']
@@ -14,16 +15,26 @@ class DatasetAdapter(ABC):
 
 
 class AcrimaAdapter(DatasetAdapter):
-    """Read explicit binary class folders or user-supplied glaucoma annotations."""
-    def __init__(self, root, class_directories=None, annotations_csv=None):
+    """Read explicit folders, CSV annotations, or canonical flat ACRIMA filenames."""
+    def __init__(self, root, class_directories=None, annotations_csv=None, label_mode=None):
         self.root = Path(root).resolve()
         self.class_directories = class_directories
         self.annotations_csv = annotations_csv
+        # No explicit mode preserves the original constructor's CSV/folder behavior.
+        self.label_mode = label_mode if label_mode is not None else ('csv' if annotations_csv else 'folders')
+        if self.label_mode not in ('folders', 'csv', 'filename'):
+            raise ValueError(f'Unknown ACRIMA label mode: {self.label_mode}')
+        if self.label_mode == 'csv' and not annotations_csv:
+            raise ValueError('CSV label mode requires annotations_csv')
+        if self.label_mode != 'csv' and annotations_csv:
+            raise ValueError('annotations_csv requires CSV label mode; do not mix label sources')
 
     def discover(self):
         if not self.root.is_dir():
             raise ValueError(f'Dataset directory does not exist: {self.root}')
-        if self.annotations_csv:
+        if self.label_mode == 'filename':
+            return self._discover_filenames()
+        if self.label_mode == 'csv':
             frame = pd.read_csv(self.annotations_csv, dtype=str, keep_default_na=False)
             required = {'image_id', 'image_path', 'label'}
             if not required.issubset(frame.columns):
@@ -49,6 +60,23 @@ class AcrimaAdapter(DatasetAdapter):
                     rows.append([path.relative_to(self.root).as_posix(), str(path.resolve()), 'acrima', '', label, ''])
         return pd.DataFrame(rows, columns=COLUMNS)
 
+    def _discover_filenames(self):
+        # Full matching is deliberate: absence of _g_ alone is never a label.
+        pattern = re.compile(r'Im[0-9]+(?P<glaucoma>_g)?_ACRIMA\.jpg', re.IGNORECASE)
+        rows, unexpected = [], []
+        for path in sorted(self.root.iterdir()):
+            match = pattern.fullmatch(path.name)
+            if not path.is_file() or not path.resolve().is_relative_to(self.root) or not match:
+                unexpected.append(path.name)
+                continue
+            rows.append([path.name, str(path.resolve()), 'acrima', '',
+                         int(match.group('glaucoma') is not None), ''])
+        if unexpected:
+            raise ValueError('Unexpected entries in flat ACRIMA filename mode: ' + ', '.join(unexpected))
+        if not rows:
+            raise ValueError('No canonical ACRIMA images found in the flat directory')
+        return pd.DataFrame(rows, columns=COLUMNS)
+
     def _path(self, value):
         # Preserve blank paths so validation reports them as invalid.
         return str((self.root / value).resolve()) if value.strip() else ''
@@ -62,4 +90,4 @@ def create_adapter(cfg):
     if name not in ADAPTERS:
         raise NotImplementedError(f'{name}: no verified glaucoma-label adapter implemented')
     spec = cfg['datasets'][name]
-    return ADAPTERS[name](spec['root'], spec.get('class_directories'), spec.get('annotations_csv'))
+    return ADAPTERS[name](spec['root'], spec.get('class_directories'), spec.get('annotations_csv'), label_mode=spec.get('label_mode'))

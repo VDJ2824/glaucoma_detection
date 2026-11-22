@@ -47,3 +47,10 @@ def test_reject_invalid_training_and_scope(tmp_path, section, key, value):
     doc[section][key] = value
     p = tmp_path/'bad.yaml'; p.write_text(yaml.safe_dump(doc))
     with pytest.raises(ValueError): load_config(p)
+
+
+def test_invalid_dataset_label_mode_rejected(tmp_path):
+    doc=yaml.safe_load(Path('configs/project.yaml').read_text())
+    doc['datasets']['acrima']['label_mode']='guess'
+    path=tmp_path/'bad.yaml';path.write_text(yaml.safe_dump(doc))
+    with pytest.raises(ValueError,match='label mode'):load_config(path)
