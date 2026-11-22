@@ -2,7 +2,7 @@
 
 A modular B.Tech CSE major-project scaffold for a lightweight, explainable, privacy-preserving retinal fundus image classification research prototype. Planned inference runs locally in the browser; optional Gemini-generated analytical text is requested through Flask.
 
-**Current status:** configuration and ACRIMA dataset discovery, validation, deduplication, splitting, preprocessing and training-only augmentation are implemented and unit tested. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Training, inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
+**Current status:** the dataset foundation and Phase 3 core CNN construction/two-stage transfer learning are implemented and unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Ensemble inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
 
 Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For read-only exploration, install `requirements-dev.txt`, confirm the selected filename/folder/CSV label mode, refresh notebook 00 and run notebook 01. The preparation command is a separate opt-in step that assigns splits; leave it for the preparation phase. Run `python -m pytest -q` for synthetic-data tests.
 
@@ -62,7 +62,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-Research/notebook environment (Python 3.10–3.12, CPU supported; no training starts):
+Research/notebook environment (Python 3.10–3.12, TensorFlow 2.20.0, CPU supported; no training starts on install):
 
 ```bash
 python3 -m venv .venv
@@ -154,7 +154,7 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 | `00_environment_setup.ipynb` | Implemented platform setup, diagnostics and persistent output configuration |
 | `01_dataset_exploration.ipynb` | Implemented read-only class/dimension analysis, samples and integrity checks |
 | `02_dataset_preparation.ipynb` | Documented shared dataset pipeline; processing explicitly opt-in |
-| `03_individual_model_training.ipynb` | Scaffold for independent two-stage training |
+| `03_individual_model_training.ipynb` | Implemented opt-in independent two-stage training, offline smoke tests and checkpoint recovery |
 | `04_model_evaluation.ipynb` | Scaffold for validation analysis and final held-out metrics |
 | `05_ensemble_optimization.ipynb` | Scaffold for validation-only core ensemble weight selection |
 | `06_gradcam_analysis.ipynb` | Scaffold for individual and ensemble core explanations |
@@ -163,15 +163,25 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 
 Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 for validation analysis, then 05 to freeze ensemble weights; return to 04 for final test evaluation. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
 
-All core logic stays in reusable Python modules. Later notebooks import the relevant modules, mark unimplemented steps explicitly, and load saved session settings. See [notebook details and output contracts](notebooks/README.md). Training checkpoints, histories, metrics and converted models do not exist yet; future implementations must use the configured persistent paths rather than runtime-local defaults.
+All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No real-data trained checkpoints, histories or metrics are bundled. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
 
-## Configuration and future training
+## Phase 3 training and CPU smoke tests
+
+See [the complete Phase 3 guide](docs/phase3-training.md) for the factory, frozen-manifest loader, two-stage API/CLI, per-epoch persistence and recovery contracts. Install `requirements-training.txt` plus `requirements-dev.txt` to run all tests with TensorFlow 2.20.0. Without TensorFlow, training tests explicitly skip; the dataset suite still runs.
+
+Notebook 03 supports its own Drive/repository setup and loads the existing session. By default, model construction, pretrained downloads and both training stages are disabled. For an offline CPU smoke test, set `BUILD_MODEL=True`, `WEIGHTS=None` and `RUN_FORWARD_SMOKE=True`; no images or training are needed. For actual future transfer learning, select ImageNet weights and explicitly enable training. VGG baselines remain separate.
+
+Stage 1 freezes the backbone and uses Adam/BCE at 0.001 for up to 10 epochs. Stage 2 restores the best Stage 1 checkpoint, unfreezes the last 20 layers excluding BatchNormalization and recompiles Adam at 0.0001 for up to 20 epochs. Existing normalization/augmentation code is unchanged, validation is never augmented, and training never reads test pixels or regenerates splits.
+
+The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. Performance remains unmeasured until explicitly run on real data.
+
+## Configuration and training settings
 
 `configs/project.yaml` is the central source of truth and replaces the original JSON scaffolds. It sets the three core models, optional baselines, 224×224×3 inputs, batch size 16, seed 42, 70/15/15 splits, classification head, preprocessing, augmentation, checkpoints and early stopping. Stage 1 is 10 epochs at 0.001; stage 2 is 20 epochs at 0.0001 with selective fine-tuning and frozen batch normalization. These settings are not validated hyperparameters.
 
-Dataset paths resolve relative to the config's project root. Export `DATASET_ROOT` for selected dataset storage and `ARTIFACTS_ROOT` for checkpoints, including Colab/Kaggle mounts. GPU training remains future work; CPU data processing is supported now. Train each model independently when training is implemented. ImageNet weights must only be fetched by explicitly invoked future training.
+Dataset paths resolve relative to the config's project root. Export `DATASET_ROOT` for selected dataset storage and `ARTIFACTS_ROOT` for checkpoints, including Colab/Kaggle mounts. Core training uses CPU or available TensorFlow accelerators and is tested with TensorFlow 2.20.0 on CPU. Train models independently; model construction with ImageNet weights can download parameters only when explicitly invoked.
 
-Training/evaluation/export scripts remain disabled and produce no artifacts. `scripts/prepare_dataset.py` is the implemented local-only entry point. VGG experiments remain optional; only core models are intended for browser export and the application. Use the separate conversion requirements later and validate exact compatibility.
+`scripts/train_core.py` now supports explicit opt-in core training from a saved session and frozen CSV. Evaluation/export scripts remain disabled. `scripts/prepare_dataset.py` remains a separate preparation entry point and is never called during training. VGG experiments remain optional; only core models are intended for browser export and the application. Use the separate conversion requirements later and validate exact compatibility.
 
 Ensemble weights are not yet configured; validation-based weight selection remains future work. Equal and weighted heatmap fusion are both planned, with the ensemble heatmap as the main web visualization. Do not invent trained weights, thresholds or performance results.
 
@@ -183,7 +193,7 @@ Gemini should narrate supplied results without inventing findings, medical advic
 
 ## Validation and next steps
 
-The dataset foundation includes tested patient grouping and preprocessing. Next implement core model construction and independent two-stage training, then validate them on real, verified data. Evaluate on an untouched test set after selecting thresholds and ensemble weights using validation data. Add browser conversion only after model and preprocessing metadata are stable. Validate probability and Grad-CAM parity before enabling inference or reports.
+The dataset foundation includes tested patient grouping and preprocessing. Core construction and two-stage training are now implemented; the next research step is deliberate real-data training/evaluation using the frozen manifest. No real-data training occurred during implementation. Evaluate on an untouched test set after selecting thresholds and ensemble weights using validation data. Add browser conversion only after model and preprocessing metadata are stable. Validate probability and Grad-CAM parity before enabling inference or reports.
 
 Required future checks include dataset leakage, calibration, sensitivity/specificity and class imbalance, cross-dataset generalization, quality thresholds, browser memory/latency, tensor disposal, payload privacy/consent, and local PDF behavior. Individual Grad-CAM target layers, TF.js gradient support and heatmap fusion require architecture-specific validation; ordinary model conversion alone does not guarantee usable browser Grad-CAM.
 

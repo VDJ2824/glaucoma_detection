@@ -1,13 +1,13 @@
 # Colab and Kaggle notebooks
 
-These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exploration (01) and environment setup are implemented; training, evaluation, ensemble, Grad-CAM and conversion remain documented scaffolds. No notebook initiates training or dataset downloads. Notebook 01 now performs read-only exploration when run; it requires an existing dataset. The preparation call in 02 is disabled until you explicitly enable it.
+These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exploration (01) and environment setup are implemented; Phase 3 training (03) is implemented with explicit opt-in flags; evaluation, ensemble, Grad-CAM and conversion remain documented scaffolds. Training starts only when explicitly enabled in 03; no notebook downloads datasets. Notebook 01 now performs read-only exploration when run; it requires an existing dataset. The preparation call in 02 is disabled until you explicitly enable it.
 
 | Notebook | Purpose |
 | --- | --- |
 | `00_environment_setup.ipynb` | Mount Drive on Colab; optionally clone/install; verify TensorFlow/GPU; save persistent session configuration |
 | `01_dataset_exploration.ipynb` | Implemented class/dimension summaries, RGB sample plots and duplicate/corruption checks |
 | `02_dataset_preparation.ipynb` | Opt-in shared validation, deduplication, split preparation and preprocessing inspection |
-| `03_individual_model_training.ipynb` | Future independent two-stage training of one selected model |
+| `03_individual_model_training.ipynb` | Implemented independent setup, opt-in two-stage training, histories and checkpoint recovery |
 | `04_model_evaluation.ipynb` | Future validation analysis and final held-out evaluation |
 | `05_ensemble_optimization.ipynb` | Future core-only ensemble weight selection on validation data |
 | `06_gradcam_analysis.ipynb` | Future individual core Grad-CAM and equal/weighted fusion |
@@ -38,10 +38,12 @@ The session JSON is a resolved configuration snapshot, not a replacement for edi
   environment/            # session.json, TF check, pip freeze, source commit
 ```
 
-Future callbacks must use `cfg['checkpoints']`; metrics/history writers must use `cfg['artifacts']`; exporters must use `cfg['export']['output_root']`. No writer should hardcode `/content` or the frontend directory. The helper does not create the dataset directory, edit original images, construct models or write model artifacts. Reusing a run name can overwrite derived files; use distinct names for independent experiments.
+Training callbacks use `cfg['checkpoints']`; metrics/history writers use `cfg['artifacts']`; exporters must use `cfg['export']['output_root']`. No writer should hardcode `/content` or the frontend directory. The helper does not create the dataset directory, edit original images, construct models or write model artifacts. Reusing a run name can overwrite derived files; use distinct names for independent experiments.
 
 On **Colab**, choose an artifact root under `/content/drive/MyDrive/...` after mounting; files under `/content` alone are ephemeral. Drive may be slower for frequent writes; future training should use an explicit save strategy without treating temporary local checkpoints as durable. See [Colab storage/limits](https://research.google.com/colaboratory/faq.html) and [Drive mount example](https://colab.research.google.com/notebooks/io.ipynb).
 
 On **Kaggle**, attach your own labeled dataset under `/kaggle/input`, put artifacts under `/kaggle/working`, and save a notebook version that includes outputs before leaving the runtime. Export the artifacts and upload them to Google Drive if Drive is your long-term archive. There is no automatic Drive mount/sync in Kaggle, and interactive session files alone are not a backup. A new saved run can start with a clean state: reattach needed prior artifacts and configure their paths explicitly. Review [Kaggle notebook settings and saved versions](https://www.kaggle.com/docs/notebooks).
 
 Dependencies/cloning may require Internet, while dataset processing itself is local. No tokens, dataset files, patient information or populated notebook outputs should be committed. See the root README for GitHub and platform setup, and [dataset instructions](../docs/datasets.md) for ACRIMA organization.
+
+See [Phase 3 instructions](../docs/phase3-training.md) for TensorFlow 2.20.0, offline weights=None smoke tests and the frozen-manifest recovery contract. Existing notebook 00–02 edits are retained.

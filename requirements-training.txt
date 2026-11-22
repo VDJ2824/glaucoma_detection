@@ -1,0 +1,4 @@
+# CPU or supported hosted GPU runtime; no dataset/weight downloads on install.
+-r requirements-data.txt
+tensorflow==2.20.0
+matplotlib>=3.8,<4

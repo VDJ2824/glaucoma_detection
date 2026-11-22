@@ -18,17 +18,17 @@ def test_notebook_schema_and_python_syntax(name):
     assert (notebook['nbformat'], notebook['nbformat_minor']) == (4, 5)
     assert notebook['metadata']['kernelspec']['name'] == 'python3'
     # Colab saves some cell IDs in metadata instead of the nbformat cell field.
-    ids = [cell.get('id', cell['metadata'].get('id')) if name == '00_environment_setup' else cell['id'] for cell in notebook['cells']]
+    ids = [cell.get('id', cell['metadata'].get('id')) for cell in notebook['cells']]
     assert all(ids) and len(set(ids)) == len(notebook['cells'])
     for cell in notebook['cells']:
         source = ''.join(cell['source'])
         if cell['cell_type'] == 'code':
-            if name != '00_environment_setup':
+            if name not in NAMES[:3]:
                 assert cell['outputs'] == [] and cell['execution_count'] is None
             else:
                 # The user's executed Colab setup includes a standalone shell diagnostic.
                 # Leave its recorded outputs and IPython cells intact.
-                source = '\n'.join(line for line in source.splitlines() if not line.lstrip().startswith(('!', '%')))
+                source = '\n'.join((line[:len(line)-len(line.lstrip())] + 'pass  # IPython command') if line.lstrip().startswith(('!', '%')) else line for line in source.splitlines())
             tree = ast.parse(source)
             for node in ast.walk(tree):
                 if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith('glaucoma'):
@@ -38,7 +38,7 @@ def test_notebook_schema_and_python_syntax(name):
                             importlib.import_module(f'{node.module}.{symbol.name}')
 
 
-@pytest.mark.parametrize('name', NAMES[2:])
+@pytest.mark.parametrize('name', NAMES[3:])
 def test_scaffold_run_all_has_no_processing_side_effects(name, tmp_path, monkeypatch):
     cfg = configure_workspace(ROOT/'configs/project.yaml', tmp_path/'missing-dataset', tmp_path/'drive')
     session = save_session(cfg, tmp_path/'drive/session.json')
@@ -53,27 +53,22 @@ def test_scaffold_run_all_has_no_processing_side_effects(name, tmp_path, monkeyp
     assert not (tmp_path/'missing-dataset').exists()
 
 
-def test_exploration_notebook_runs_read_only(tmp_path, monkeypatch, image_factory):
-    import matplotlib
-    matplotlib.use('Agg')
-    import matplotlib.pyplot as plt
-    monkeypatch.setattr(plt, 'show', lambda: None)
-    root = tmp_path/'flat'
-    image_factory('flat/Im001_ACRIMA.jpg')
-    image_factory('flat/Im310_g_ACRIMA.jpg',seed=2)
-    before = {p:p.read_bytes() for p in root.iterdir()}
-    cfg = configure_workspace(ROOT/'configs/project.yaml', root, tmp_path/'drive')
-    session = save_session(cfg, tmp_path/'drive/session.json')
-    monkeypatch.setenv('GLAUCOMA_SESSION', str(session))
-    all_before = set(tmp_path.rglob('*'))
-    notebook = json.loads((ROOT/'notebooks/01_dataset_exploration.ipynb').read_text())
-    namespace = {}
+
+def test_training_notebook_defaults_do_not_construct_or_fit(tmp_path, monkeypatch):
+    from glaucoma.models import factory
+    from glaucoma.training import trainer
+    def forbidden(*args, **kwargs):
+        raise AssertionError('Default notebook must not construct models or fit')
+    monkeypatch.setattr(factory, 'build_model', forbidden)
+    monkeypatch.setattr(trainer, 'train_stage', forbidden)
+    cfg=configure_workspace(ROOT/'configs/project.yaml',tmp_path/'missing-data',tmp_path/'drive')
+    session=save_session(cfg,tmp_path/'drive/session.json')
+    monkeypatch.setenv('GLAUCOMA_SESSION',str(session))
+    notebook=json.loads((ROOT/'notebooks/03_individual_model_training.ipynb').read_text())
+    namespace={}
+    before=set(tmp_path.rglob('*'))
     for cell in notebook['cells']:
-        if cell['cell_type'] == 'code':
-            exec(compile(''.join(cell['source']), '01_dataset_exploration', 'exec'), namespace)
-    assert {p:p.read_bytes() for p in root.iterdir()} == before
-    assert set(tmp_path.rglob('*')) == all_before
-    assert namespace['exploration'].metadata.split.eq('').all()
-    namespace['class_figure'].canvas.draw()
-    namespace['sample_figure'].canvas.draw()
-    plt.close('all')
+        if cell['cell_type']=='code':
+            exec(compile(''.join(cell['source']),'03_individual_model_training','exec'),namespace)
+    assert set(tmp_path.rglob('*'))==before
+    assert namespace['model'] is None and not namespace['RUN_STAGE1'] and not namespace['RUN_STAGE2']

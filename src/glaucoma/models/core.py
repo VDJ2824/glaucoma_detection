@@ -1,4 +1,5 @@
-"""Registry for ResNet50, MobileNetV2 and EfficientNetB0 only.
+"""Public core-model construction API; VGG builders stay in baselines.py."""
+from .factory import build_model, get_backbone
+from .registry import CORE_APPLICATIONS
 
-Placeholder only; implementation is deferred.
-"""
+__all__ = ['build_model', 'get_backbone', 'CORE_APPLICATIONS']

@@ -1,6 +1,6 @@
 # Research / CPU development. Use an isolated Python 3.10–3.12 environment.
 # TensorFlow GPU setup depends on the Colab/Kaggle runtime.
-tensorflow>=2.16,<2.19
+tensorflow==2.20.0
 opencv-python-headless>=4.9,<5
 numpy>=1.26,<2.1
 pandas>=2.2,<3
