@@ -51,7 +51,7 @@ docs/                       Design, privacy and research workflow
 
 ## Local environment setup
 
-Use Python 3.10–3.12 and Node.js 20.19+ or 22.12+. Dependencies are declared as version ranges; lock exact versions after installation and compatibility validation. Installation is optional at this scaffold stage.
+Use Python 3.10–3.13 and Node.js 20.19+ or 22.12+. Dependencies are declared as version ranges; lock exact versions after installation and compatibility validation. Installation is optional at this scaffold stage.
 
 For dataset development and unit tests (CPU only, no TensorFlow needed):
 
@@ -62,7 +62,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-Research/notebook environment (Python 3.10–3.12, TensorFlow 2.20.0, CPU supported; no training starts on install):
+Research/notebook environment (Python 3.10–3.13, TensorFlow 2.20.x/2.21.x, CPU supported; no training starts on install):
 
 ```bash
 python3 -m venv .venv
@@ -163,17 +163,30 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 
 Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 for validation analysis, then 05 to freeze ensemble weights; return to 04 for final test evaluation. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
 
-All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No real-data trained checkpoints, histories or metrics are bundled. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
+All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints or full training histories are bundled; the reported MobileNetV2 validation summaries and metric curve are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
+
+## Recorded MobileNetV2 Kaggle experiment
+
+The completed 26 November 2026 Kaggle run used Python 3.13.16, TensorFlow 2.21.0 and Keras 3.13.2. At each stage's best validation-loss epoch:
+
+| Stage | Best epoch | Completed epochs | Validation loss | Validation accuracy | Validation ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Stage 1 | 10 | 10 | 0.140319 | 97.1698% | 0.997464 |
+| Stage 2 (selected) | 9 | 14 | 0.038979 | 99.0566% | 0.999638 |
+
+These are **reported validation results, not held-out test or clinical performance**. The [experiment record](docs/experiments/mobilenet_v2_kaggle_2026-11-26/README.md) preserves full summaries, provenance, logs and the original curve separately from reusable Notebook 03. No weights, dataset files or backup ZIPs are committed. Architecture, training and frozen partitions are unchanged.
+
+Notebook 03 now detects Kaggle before Colab, retains local defaults, and offers opt-in relocation of a frozen session/CSV to an attached flat image directory. It changes only derived image paths and storage paths; all source split assignments are preserved. Every training/download/setup flag remains disabled by default. See the [cross-platform setup details](docs/phase3-training.md#kaggle-portability-and-python-313).
 
 ## Phase 3 training and CPU smoke tests
 
-See [the complete Phase 3 guide](docs/phase3-training.md) for the factory, frozen-manifest loader, two-stage API/CLI, per-epoch persistence and recovery contracts. Install `requirements-training.txt` plus `requirements-dev.txt` to run all tests with TensorFlow 2.20.0. Without TensorFlow, training tests explicitly skip; the dataset suite still runs.
+See [the complete Phase 3 guide](docs/phase3-training.md) for the factory, frozen-manifest loader, two-stage API/CLI, per-epoch persistence and recovery contracts. Install `requirements-training.txt` plus `requirements-dev.txt` to run all tests. Python 3.10–3.12 retains TensorFlow 2.20.0/NumPy <2.1; Python 3.13 selects TensorFlow 2.21.x/NumPy >=2.1. Leave package installation disabled on an already working hosted stack. Without TensorFlow, training tests explicitly skip; the dataset suite still runs.
 
 Notebook 03 supports its own Drive/repository setup and loads the existing session. By default, model construction, pretrained downloads and both training stages are disabled. For an offline CPU smoke test, set `BUILD_MODEL=True`, `WEIGHTS=None` and `RUN_FORWARD_SMOKE=True`; no images or training are needed. For actual future transfer learning, select ImageNet weights and explicitly enable training. VGG baselines remain separate.
 
 Stage 1 freezes the backbone and uses Adam/BCE at 0.001 for up to 10 epochs. Stage 2 restores the best Stage 1 checkpoint, unfreezes the last 20 layers excluding BatchNormalization and recompiles Adam at 0.0001 for up to 20 epochs. Existing normalization/augmentation code is unchanged, validation is never augmented, and training never reads test pixels or regenerates splits.
 
-The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. Performance remains unmeasured until explicitly run on real data.
+The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. The reported MobileNetV2 validation run is documented above; held-out test performance and generalization remain unmeasured.
 
 ## Configuration and training settings
 
@@ -197,4 +210,4 @@ The dataset foundation includes tested patient grouping and preprocessing. Core 
 
 Required future checks include dataset leakage, calibration, sensitivity/specificity and class imbalance, cross-dataset generalization, quality thresholds, browser memory/latency, tensor disposal, payload privacy/consent, and local PDF behavior. Individual Grad-CAM target layers, TF.js gradient support and heatmap fusion require architecture-specific validation; ordinary model conversion alone does not guarantee usable browser Grad-CAM.
 
-No performance, clinical validity or deployment readiness is claimed. See [research workflow](docs/research-workflow.md) and [architecture](docs/architecture.md).
+Reported validation measurements do not establish clinical validity or deployment readiness. See [research workflow](docs/research-workflow.md) and [architecture](docs/architecture.md).

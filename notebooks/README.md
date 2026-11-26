@@ -20,7 +20,7 @@ Start with 00 → 01 → 02 → 03 → 04 (validation only) → 05 → 04 (froze
 
 Run 00 in each new hosted runtime. Set the repository path, dataset path, artifact root and run name; mounting/installing requires the platform's normal interaction. Subsequent notebooks load the saved `session.json`. They do not inherit variables from 00 in another kernel: paste its printed path into `SESSION_FILE`, or export `GLAUCOMA_SESSION` in that kernel. If TensorFlow dependencies were installed/changed, restart the kernel before verification. Keep installation disabled on the rerun.
 
-The session JSON is a resolved configuration snapshot, not a replacement for editing `configs/project.yaml`. After changing model selection or dataset mapping, rerun configuration in 00 with the intended run name; choose a new name to preserve earlier settings. For a different Colab/Kaggle machine, regenerate manifests/configuration with the same frozen image IDs and split assignments as appropriate; absolute paths from another platform are not portable.
+The session JSON is a resolved configuration snapshot, not a replacement for editing `configs/project.yaml`. After changing model selection or dataset mapping, rerun configuration in 00 with the intended run name; choose a new name to preserve earlier settings. For a different Colab/Kaggle machine, use Notebook 03's explicit frozen-session relocation helper to create path-adjusted copies; do not regenerate splits. Original image IDs, labels, grouping keys and assignments are preserved, and existing checkpoint contract checks still apply.
 
 ## Persistent outputs
 
@@ -46,4 +46,6 @@ On **Kaggle**, attach your own labeled dataset under `/kaggle/input`, put artifa
 
 Dependencies/cloning may require Internet, while dataset processing itself is local. No tokens, dataset files, patient information or populated notebook outputs should be committed. See the root README for GitHub and platform setup, and [dataset instructions](../docs/datasets.md) for ACRIMA organization.
 
-See [Phase 3 instructions](../docs/phase3-training.md) for TensorFlow 2.20.0, offline weights=None smoke tests and the frozen-manifest recovery contract. Existing notebook 00–02 edits are retained.
+See [Phase 3 instructions](../docs/phase3-training.md) for TensorFlow 2.20.x/2.21.x, Python 3.10–3.13, offline weights=None smoke tests and the frozen-manifest recovery contract. Existing notebook 00–02 edits are retained.
+
+The completed Kaggle MobileNetV2 run is preserved in [separate experiment documentation](../docs/experiments/mobilenet_v2_kaggle_2026-11-26/README.md). Notebook 03 has no executed outputs, automatic ZIP creation or enabled training flags.

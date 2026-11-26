@@ -1,0 +1,117 @@
+{
+  "experiment_date": "2026-11-26",
+  "model_name": "mobilenet_v2",
+  "dataset_name": "ACRIMA",
+  "provenance": {
+    "source": "User-supplied executed Kaggle notebook",
+    "source_notebook_sha256": "4c5ac82ef267e6b0790c6503dda477fd5a7cf02d4e8526f285539b661f611244",
+    "baseline_repository_commit": "3042e4aada7c8dfdc6b4e6562484c0f2d4642701",
+    "stage2_output_cell_index": 24,
+    "stage1_output_cell_index": 20,
+    "status": "Reported experiment, not rerun or independently reproduced in this update",
+    "stage1_summary_source": "User-pasted metrics/mobilenet_v2/stage1.json supplied after notebook inspection",
+    "stage1_exported_cell_output": {
+      "type": "error",
+      "name": "FileExistsError",
+      "message": "Stage artifacts exist; resume explicitly or use a new run directory",
+      "note": "A later rerun was blocked by the existing-artifacts guard; this is not the original successful Stage 1 summary."
+    },
+    "comparison_github_commit": "e14a60c",
+    "comparison_github_notebook_sha256": "49ef50e5692ea4722b678bd2bdd5c0c6ccc2ea8e4e33ca5bf09edfaf69cdc53b"
+  },
+  "runtime": {
+    "platform": "kaggle",
+    "python": "3.13.16",
+    "tensorflow": "2.21.0",
+    "keras": "3.13.2",
+    "visible_gpus": [
+      "Tesla T4",
+      "Tesla T4"
+    ],
+    "recorded_execution_device": "/job:localhost/replica:0/task:0/device:GPU:0",
+    "multi_gpu_training_verified": false
+  },
+  "partition_counts": {
+    "train": {
+      "0": 216,
+      "1": 277,
+      "total": 493
+    },
+    "validation": {
+      "0": 46,
+      "1": 60,
+      "total": 106
+    },
+    "test": {
+      "0": 47,
+      "1": 59,
+      "total": 106
+    }
+  },
+  "stage1": {
+    "model_name": "mobilenet_v2",
+    "stage": "stage1",
+    "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage1/best.keras",
+    "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage1/last.keras",
+    "best_epoch": 10,
+    "completed_epochs": 10,
+    "best_val_loss": 0.1403188705444336,
+    "best_epoch_metrics": {
+      "accuracy": 0.9229208827018738,
+      "auc": 0.9758573770523071,
+      "loss": 0.20762448012828827,
+      "precision": 0.9222614765167236,
+      "recall": 0.9422382712364197,
+      "val_accuracy": 0.9716981053352356,
+      "val_auc": 0.9974638223648071,
+      "val_loss": 0.1403188705444336,
+      "val_precision": 0.9523809552192688,
+      "val_recall": 1.0,
+      "learning_rate": 0.0010000000474974513
+    },
+    "history_path": "/kaggle/working/artifacts/runs/development/histories/mobilenet_v2/stage1/history.json",
+    "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019",
+    "tensorflow_version": "2.21.0",
+    "keras_version": "3.13.2"
+  },
+  "stage2": {
+    "model_name": "mobilenet_v2",
+    "stage": "stage2",
+    "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+    "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/last.keras",
+    "best_epoch": 9,
+    "completed_epochs": 14,
+    "best_val_loss": 0.03897889703512192,
+    "best_epoch_metrics": {
+      "accuracy": 0.9837728142738342,
+      "auc": 0.9994317889213562,
+      "loss": 0.03698784485459328,
+      "precision": 0.9855595827102661,
+      "recall": 0.9855595827102661,
+      "val_accuracy": 0.9905660152435303,
+      "val_auc": 0.9996376037597656,
+      "val_loss": 0.03897889703512192,
+      "val_precision": 1.0,
+      "val_recall": 0.9833333492279053,
+      "learning_rate": 4.999999873689376e-05
+    },
+    "history_path": "/kaggle/working/artifacts/runs/development/histories/mobilenet_v2/stage2/history.json",
+    "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019",
+    "tensorflow_version": "2.21.0",
+    "keras_version": "3.13.2"
+  },
+  "selection": {
+    "stage": "stage2",
+    "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+    "val_loss": 0.03897889703512192,
+    "epoch": 9,
+    "complete": true,
+    "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019"
+  },
+  "test_set_evaluation": null,
+  "limitations": [
+    "Validation-selected results, not independent held-out test metrics.",
+    "No patient IDs inferred from ACRIMA filenames; patient-level independence is not established by this export.",
+    "Only one reported MobileNetV2 run; not an ensemble result or clinical validation."
+  ]
+}

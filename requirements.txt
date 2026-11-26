@@ -1,8 +1,10 @@
-# Research / CPU development. Use an isolated Python 3.10–3.12 environment.
+# Research / CPU development. Use an isolated Python 3.10–3.13 environment.
 # TensorFlow GPU setup depends on the Colab/Kaggle runtime.
-tensorflow==2.20.0
+tensorflow==2.20.0; python_version < "3.13"
+tensorflow>=2.21,<2.22; python_version >= "3.13"
 opencv-python-headless>=4.9,<5
-numpy>=1.26,<2.1
+numpy>=1.26,<2.1; python_version < "3.13"
+numpy>=2.1,<3; python_version >= "3.13"
 pandas>=2.2,<3
 scikit-learn>=1.4,<2
 matplotlib>=3.8,<4

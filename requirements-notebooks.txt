@@ -1,4 +1,4 @@
-# Python 3.10–3.12, same research stack as local development.
+# Python 3.10–3.13, same research stack as local development.
 # May replace hosted preinstalled packages; restart kernel after installation.
 -r requirements.txt
 ipykernel>=6,<7

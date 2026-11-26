@@ -1,10 +1,10 @@
 # Phase 3: individual core CNN transfer learning
 
-This phase implements core construction and two-stage training. Existing dataset processing and notebooks 00–02 remain unchanged, including the latest Colab edits pulled before implementation. No dataset is downloaded or trained during development; verification uses synthetic images/tensors and randomly initialized models.
+This phase implements core construction and two-stage training. Existing dataset processing and notebooks 00–02 remain unchanged, including the latest Colab edits pulled before implementation. No dataset is downloaded or trained during development; verification uses synthetic images/tensors and randomly initialized models. A separately supplied completed Kaggle experiment is now documented outside the reusable notebook.
 
 ## Runtime and installation
 
-Use Python 3.10–3.12. The training dependencies pin **TensorFlow 2.20.0**, matching the supplied Colab runtime version. The implementation uses public `tf.keras` APIs, native `.keras` checkpoints and finite `tf.data` inputs; it does not enable legacy `tf_keras` or depend on a particular CUDA device. CPU tests cover TensorFlow 2.20.0 with Keras 3.15.1 and Python 3.12. The run contract also records the actual TensorFlow/Keras/Python versions. GPU availability, Drive I/O and ImageNet retrieval still require checks in the actual hosted environment.
+Use Python 3.10–3.13. Dependency markers retain **TensorFlow 2.20.0** on Python 3.10–3.12 and select **TensorFlow 2.21.x** on Python 3.13, matching the supplied successful Kaggle environment. The implementation uses public `tf.keras` APIs, native `.keras` checkpoints and finite `tf.data` inputs; it does not enable legacy `tf_keras` or depend on a particular CUDA device. CPU tests cover TensorFlow 2.20.0 with Keras 3.15.1 and Python 3.12. The run contract also records the actual TensorFlow/Keras/Python versions. GPU availability, Drive I/O and ImageNet retrieval still require checks in the actual hosted environment.
 
 ```bash
 source .venv/bin/activate
@@ -12,7 +12,7 @@ python -m pip install -r requirements-training.txt -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The data-only development install can run non-training tests without TensorFlow; `tests/test_training.py` is explicitly skipped if TensorFlow is absent. Install training dependencies to exercise actual model/fit tests. `requirements.txt` and notebook research installs now also target 2.20.0. Installing packages may replace preinstalled versions; restart the notebook kernel afterwards. TensorFlow.js conversion remains a separate, future compatibility exercise; this phase does not claim conversion parity.
+The data-only development install can run non-training tests without TensorFlow; `tests/test_training.py` is explicitly skipped if TensorFlow is absent. Install training dependencies to exercise actual model/fit tests. `requirements.txt` and notebook research installs use the same Python-version-specific TensorFlow/NumPy markers. Installing packages may replace preinstalled versions; restart the notebook kernel afterwards. TensorFlow.js conversion remains a separate, future compatibility exercise; this phase does not claim conversion parity.
 
 ## Architecture and preprocessing
 
@@ -97,3 +97,22 @@ Notebook 03 is independent: configure repository/session paths, optionally mount
 5. Enable `SHOW_HISTORY` to plot existing logged train/validation curves. Optional plot saving uses the configured persistent metrics directory. The final cell records best-checkpoint selection only after an enabled training stage.
 
 Old session snapshots do not automatically pick up new YAML keys: Notebook 03 supplies the documented ReduceLROnPlateau defaults if absent. Existing stage settings should already be 10/20 epochs at 0.001/0.0001; inspect them before training. Notebook 00–02 edits and saved sessions are not overwritten. No new accuracy, loss, AUC or clinical performance is claimed by implementation tests.
+
+
+## Kaggle portability and Python 3.13
+
+The supplied executed notebook demonstrates Python 3.13.16 / TensorFlow 2.21.0 / Keras 3.13.2 on Kaggle; see the [experiment provenance](experiments/mobilenet_v2_kaggle_2026-11-26/README.md). Current local unit tests run under Python 3.12 / TensorFlow 2.20.0. Python-version guard/marker tests are simulated; they are not a claim that the complete suite ran locally on Python 3.13.
+
+The package now permits Python >=3.10,<3.14. On Python 3.13, NumPy >=2.1 is needed instead of the previous <2.1 constraint ([NumPy 2.1 release notes](https://numpy.org/doc/stable/release/2.1.0-notes.html)); the TensorFlow dependency selects the observed 2.21 line ([official supported wheels](https://www.tensorflow.org/install/pip)). Older local/Colab environments retain their tested dependency selections. Conversion remains a separate compatibility task. Do not reinstall/downgrade a working hosted GPU stack just to satisfy the old pinned training manifest.
+
+Notebook 03 uses Kaggle environment markers or `/kaggle/working` before checking Colab's `/content`; it never hard-codes Kaggle for all users. Colab still mounts Drive explicitly. Local runs use the repository and its artifact directory. Notebook 03 is independent, so earlier user-edited notebooks 00–02 have not been rewritten.
+
+For a Drive-to-Kaggle bundle:
+
+1. Attach your existing images and frozen session/CSV privately. Set `KAGGLE_INPUT_ROOT` to the actual directory directly containing `database/`, `acrima_metadata.csv` and `session.json`. The defaults are placeholders, not a dataset discovery/download command.
+2. Set `RELOCATE_FROZEN_SESSION=True`, leave `METADATA_CSV=None`, and choose a writable `OUTPUT_ARTIFACT_ROOT` plus `RUN_NAME`. This explicitly calls `relocate_frozen_session` in the shared notebook runtime utility.
+3. The utility reads metadata as strings, remaps only `image_path` by basename to the existing flat image directory, checks every target exists and rejects basename collisions. It preserves row order and all other columns (including labels, splits and grouping keys), clones the existing configuration rather than rebuilding training settings, and creates derived files under `<artifact_root>/runs/<RUN_NAME>`.
+4. Source CSV/JSON/images are untouched. Existing derived files are reused only if identical; conflicting outputs fail instead of being overwritten. For subsequent runs set `SESSION_FILE` to the printed derived session and disable relocation. Different directory structures need a separately verified path mapping, not a guessed basename collapse.
+5. Training remains separately opt-in. No helper regenerates splits, changes a model or relaxes checkpoint-contract checks. In particular, relocating a manifest does not rewrite old checkpoint contracts: recovery requires the effective paths/configuration originally used for that checkpoint.
+
+The helper checks path existence across the frozen manifest during explicit portability setup; it does not decode any images. Training continues to use only the existing train/validation loader and never test pixels. The notebook no longer creates backup ZIPs automatically. Keep model backups outside Git, save Kaggle outputs/export them privately, and retain original metrics/provenance alongside them.

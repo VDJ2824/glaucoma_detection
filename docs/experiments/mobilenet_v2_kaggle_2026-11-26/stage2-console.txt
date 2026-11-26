@@ -1,0 +1,54 @@
+Epoch 1/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 80s 2s/step - accuracy: 0.7505 - auc: 0.7982 - loss: 0.6137 - precision: 0.7674 - recall: 0.7978 - val_accuracy: 0.9717 - val_auc: 0.9967 - val_loss: 0.2704 - val_precision: 0.9672 - val_recall: 0.9833 - learning_rate: 1.0000e-04
+Epoch 2/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 10s 309ms/step - accuracy: 0.9026 - auc: 0.9632 - loss: 0.2445 - precision: 0.8990 - recall: 0.9314 - val_accuracy: 0.8019 - val_auc: 0.9975 - val_loss: 0.3801 - val_precision: 1.0000 - val_recall: 0.6500 - learning_rate: 1.0000e-04
+Epoch 3/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 9s 304ms/step - accuracy: 0.8783 - auc: 0.9487 - loss: 0.2929 - precision: 0.8945 - recall: 0.8881 - val_accuracy: 0.9906 - val_auc: 0.9991 - val_loss: 0.0799 - val_precision: 0.9836 - val_recall: 1.0000 - learning_rate: 1.0000e-04
+Epoch 4/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 10s 311ms/step - accuracy: 0.9493 - auc: 0.9846 - loss: 0.1526 - precision: 0.9565 - recall: 0.9531 - val_accuracy: 0.9717 - val_auc: 0.9986 - val_loss: 0.0994 - val_precision: 0.9524 - val_recall: 1.0000 - learning_rate: 1.0000e-04
+Epoch 5/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 10s 310ms/step - accuracy: 0.9452 - auc: 0.9888 - loss: 0.1356 - precision: 0.9496 - recall: 0.9531 - val_accuracy: 0.9811 - val_auc: 0.9996 - val_loss: 0.0662 - val_precision: 0.9833 - val_recall: 0.9833 - learning_rate: 1.0000e-04
+Epoch 6/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 8s 270ms/step - accuracy: 0.9655 - auc: 0.9935 - loss: 0.0893 - precision: 0.9676 - recall: 0.9711 - val_accuracy: 0.9717 - val_auc: 0.9989 - val_loss: 0.0698 - val_precision: 0.9672 - val_recall: 0.9833 - learning_rate: 1.0000e-04
+Epoch 7/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 10s 310ms/step - accuracy: 0.9797 - auc: 0.9983 - loss: 0.0621 - precision: 0.9751 - recall: 0.9892 - val_accuracy: 0.9623 - val_auc: 0.9996 - val_loss: 0.0868 - val_precision: 0.9375 - val_recall: 1.0000 - learning_rate: 1.0000e-04
+Epoch 8/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 9s 300ms/step - accuracy: 0.9838 - auc: 0.9979 - loss: 0.0582 - precision: 0.9856 - recall: 0.9856 - val_accuracy: 0.9717 - val_auc: 0.9986 - val_loss: 0.0672 - val_precision: 0.9524 - val_recall: 1.0000 - learning_rate: 5.0000e-05
+Epoch 9/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 10s 327ms/step - accuracy: 0.9838 - auc: 0.9994 - loss: 0.0370 - precision: 0.9856 - recall: 0.9856 - val_accuracy: 0.9906 - val_auc: 0.9996 - val_loss: 0.0390 - val_precision: 1.0000 - val_recall: 0.9833 - learning_rate: 5.0000e-05
+Epoch 10/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 9s 299ms/step - accuracy: 0.9878 - auc: 0.9995 - loss: 0.0347 - precision: 0.9892 - recall: 0.9892 - val_accuracy: 0.9717 - val_auc: 0.9993 - val_loss: 0.0691 - val_precision: 0.9524 - val_recall: 1.0000 - learning_rate: 5.0000e-05
+Epoch 11/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 8s 273ms/step - accuracy: 0.9939 - auc: 0.9999 - loss: 0.0192 - precision: 0.9928 - recall: 0.9964 - val_accuracy: 0.9717 - val_auc: 0.9993 - val_loss: 0.0405 - val_precision: 0.9831 - val_recall: 0.9667 - learning_rate: 5.0000e-05
+Epoch 12/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 9s 306ms/step - accuracy: 0.9919 - auc: 0.9998 - loss: 0.0224 - precision: 0.9928 - recall: 0.9928 - val_accuracy: 0.9811 - val_auc: 0.9993 - val_loss: 0.0529 - val_precision: 1.0000 - val_recall: 0.9667 - learning_rate: 2.5000e-05
+Epoch 13/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 9s 299ms/step - accuracy: 0.9959 - auc: 1.0000 - loss: 0.0163 - precision: 1.0000 - recall: 0.9928 - val_accuracy: 0.9717 - val_auc: 0.9993 - val_loss: 0.0477 - val_precision: 0.9524 - val_recall: 1.0000 - learning_rate: 2.5000e-05
+Epoch 14/20
+31/31 ━━━━━━━━━━━━━━━━━━━━ 8s 272ms/step - accuracy: 0.9959 - auc: 1.0000 - loss: 0.0121 - precision: 0.9928 - recall: 1.0000 - val_accuracy: 0.9717 - val_auc: 0.9993 - val_loss: 0.0457 - val_precision: 0.9831 - val_recall: 0.9667 - learning_rate: 1.2500e-05
+{
+  "model_name": "mobilenet_v2",
+  "stage": "stage2",
+  "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+  "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/last.keras",
+  "best_epoch": 9,
+  "completed_epochs": 14,
+  "best_val_loss": 0.03897889703512192,
+  "best_epoch_metrics": {
+    "accuracy": 0.9837728142738342,
+    "auc": 0.9994317889213562,
+    "loss": 0.03698784485459328,
+    "precision": 0.9855595827102661,
+    "recall": 0.9855595827102661,
+    "val_accuracy": 0.9905660152435303,
+    "val_auc": 0.9996376037597656,
+    "val_loss": 0.03897889703512192,
+    "val_precision": 1.0,
+    "val_recall": 0.9833333492279053,
+    "learning_rate": 4.999999873689376e-05
+  },
+  "history_path": "/kaggle/working/artifacts/runs/development/histories/mobilenet_v2/stage2/history.json",
+  "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019",
+  "tensorflow_version": "2.21.0",
+  "keras_version": "3.13.2"
+}
