@@ -1,0 +1,239 @@
+{
+  "record_date": "2026-11-27",
+  "result_scope": "validation-selected individual-model training",
+  "test_results_provided": false,
+  "stage_metrics": [
+    {
+      "model": "mobilenet_v2",
+      "stage": "stage1",
+      "best_epoch": 10,
+      "completed_epochs": 10,
+      "accuracy": 0.9229208827018738,
+      "auc": 0.9758573770523071,
+      "loss": 0.20762448012828827,
+      "precision": 0.9222614765167236,
+      "recall": 0.9422382712364197,
+      "val_accuracy": 0.9716981053352356,
+      "val_auc": 0.9974638223648071,
+      "val_loss": 0.1403188705444336,
+      "val_precision": 0.9523809552192688,
+      "val_recall": 1.0,
+      "learning_rate": 0.0010000000474974513
+    },
+    {
+      "model": "mobilenet_v2",
+      "stage": "stage2",
+      "best_epoch": 9,
+      "completed_epochs": 14,
+      "accuracy": 0.9837728142738342,
+      "auc": 0.9994317889213562,
+      "loss": 0.03698784485459328,
+      "precision": 0.9855595827102661,
+      "recall": 0.9855595827102661,
+      "val_accuracy": 0.9905660152435303,
+      "val_auc": 0.9996376037597656,
+      "val_loss": 0.03897889703512192,
+      "val_precision": 1.0,
+      "val_recall": 0.9833333492279053,
+      "learning_rate": 4.999999873689376e-05
+    },
+    {
+      "model": "efficientnet_b0",
+      "stage": "stage1",
+      "best_epoch": 9,
+      "completed_epochs": 10,
+      "accuracy": 0.9107505083084106,
+      "auc": 0.9678182601928711,
+      "loss": 0.25576648116111755,
+      "precision": 0.9145907759666443,
+      "recall": 0.9277978539466858,
+      "val_accuracy": 0.9433962106704712,
+      "val_auc": 0.9858695268630981,
+      "val_loss": 0.2235301434993744,
+      "val_precision": 0.9354838728904724,
+      "val_recall": 0.9666666388511658,
+      "learning_rate": 0.0010000000474974513
+    },
+    {
+      "model": "efficientnet_b0",
+      "stage": "stage2",
+      "best_epoch": 18,
+      "completed_epochs": 20,
+      "accuracy": 0.9918864369392395,
+      "auc": 0.9997743964195251,
+      "loss": 0.023717405274510384,
+      "precision": 0.9892473220825195,
+      "recall": 0.9963898658752441,
+      "val_accuracy": 1.0,
+      "val_auc": 0.9999999403953552,
+      "val_loss": 0.014796104282140732,
+      "val_precision": 1.0,
+      "val_recall": 1.0,
+      "learning_rate": 9.999999747378752e-05
+    },
+    {
+      "model": "resnet50",
+      "stage": "stage1",
+      "best_epoch": 10,
+      "completed_epochs": 10,
+      "accuracy": 0.931034505367279,
+      "auc": 0.9840553402900696,
+      "loss": 0.18421031534671783,
+      "precision": 0.9263157844543457,
+      "recall": 0.9530686140060425,
+      "val_accuracy": 0.9245283007621765,
+      "val_auc": 0.9846013784408569,
+      "val_loss": 0.19014422595500946,
+      "val_precision": 0.9193548560142517,
+      "val_recall": 0.949999988079071,
+      "learning_rate": 0.0010000000474974513
+    },
+    {
+      "model": "resnet50",
+      "stage": "stage2",
+      "best_epoch": 18,
+      "completed_epochs": 20,
+      "accuracy": 0.9979715943336487,
+      "auc": 0.9999833106994629,
+      "loss": 0.004449885338544846,
+      "precision": 1.0,
+      "recall": 0.9963898658752441,
+      "val_accuracy": 1.0,
+      "val_auc": 1.0,
+      "val_loss": 0.012716665863990784,
+      "val_precision": 1.0,
+      "val_recall": 1.0,
+      "learning_rate": 1.249999968422344e-05
+    }
+  ],
+  "fine_tuning_deltas": [
+    {
+      "model": "mobilenet_v2",
+      "validation_loss_decrease": 0.10133997350931168,
+      "validation_loss_relative_decrease_percent": 72.22120098039215,
+      "validation_accuracy_delta_percentage_points": 1.8867909908294678,
+      "validation_auc_delta": 0.002173781394958496,
+      "validation_precision_delta": 0.0476190447807312,
+      "validation_recall_delta": -0.016666650772094727
+    },
+    {
+      "model": "efficientnet_b0",
+      "validation_loss_decrease": 0.20873403921723366,
+      "validation_loss_relative_decrease_percent": 93.38071185813821,
+      "validation_accuracy_delta_percentage_points": 5.660378932952881,
+      "validation_auc_delta": 0.01413041353225708,
+      "validation_precision_delta": 0.06451612710952759,
+      "validation_recall_delta": 0.03333336114883423
+    },
+    {
+      "model": "resnet50",
+      "validation_loss_decrease": 0.17742756009101868,
+      "validation_loss_relative_decrease_percent": 93.31209464809112,
+      "validation_accuracy_delta_percentage_points": 7.547169923782349,
+      "validation_auc_delta": 0.015398621559143066,
+      "validation_precision_delta": 0.08064514398574829,
+      "validation_recall_delta": 0.050000011920928955
+    }
+  ],
+  "selected_checkpoints": [
+    {
+      "model": "mobilenet_v2",
+      "stage": "stage2",
+      "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+      "val_loss": 0.03897889703512192,
+      "epoch": 9,
+      "complete": true,
+      "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019"
+    },
+    {
+      "model": "efficientnet_b0",
+      "stage": "stage2",
+      "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/efficientnet_b0/stage2/best.keras",
+      "val_loss": 0.014796104282140732,
+      "epoch": 18,
+      "complete": true,
+      "contract_hash": "e02e949b0b918c8f2984b426c90f64a14de5c4c2dda4a6e925720249af38b612"
+    },
+    {
+      "model": "resnet50",
+      "stage": "stage2",
+      "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/best.keras",
+      "val_loss": 0.012716665863990784,
+      "epoch": 18,
+      "complete": true,
+      "contract_hash": "1abce5e3aecf18ab4f97f30371af1aee5580d419047969f40bcc23530b95156e"
+    }
+  ],
+  "verification": {
+    "files_verified": 24,
+    "stages_verified": 6,
+    "epoch_rows_verified": 84,
+    "learning_rate_timing_differences": [
+      {
+        "model": "mobilenet_v2",
+        "stage": "stage2",
+        "epoch": 7,
+        "csv_learning_rate": 9.999999747378752e-05,
+        "json_learning_rate": 4.999999873689376e-05
+      },
+      {
+        "model": "mobilenet_v2",
+        "stage": "stage2",
+        "epoch": 11,
+        "csv_learning_rate": 4.999999873689376e-05,
+        "json_learning_rate": 2.499999936844688e-05
+      },
+      {
+        "model": "mobilenet_v2",
+        "stage": "stage2",
+        "epoch": 13,
+        "csv_learning_rate": 2.499999936844688e-05,
+        "json_learning_rate": 1.249999968422344e-05
+      },
+      {
+        "model": "efficientnet_b0",
+        "stage": "stage2",
+        "epoch": 20,
+        "csv_learning_rate": 9.999999747378752e-05,
+        "json_learning_rate": 4.999999873689376e-05
+      },
+      {
+        "model": "resnet50",
+        "stage": "stage2",
+        "epoch": 3,
+        "csv_learning_rate": 9.999999747378752e-05,
+        "json_learning_rate": 4.999999873689376e-05
+      },
+      {
+        "model": "resnet50",
+        "stage": "stage2",
+        "epoch": 7,
+        "csv_learning_rate": 4.999999873689376e-05,
+        "json_learning_rate": 2.499999936844688e-05
+      },
+      {
+        "model": "resnet50",
+        "stage": "stage2",
+        "epoch": 13,
+        "csv_learning_rate": 2.499999936844688e-05,
+        "json_learning_rate": 1.249999968422344e-05
+      },
+      {
+        "model": "resnet50",
+        "stage": "stage2",
+        "epoch": 20,
+        "csv_learning_rate": 1.249999968422344e-05,
+        "json_learning_rate": 6.24999984211172e-06
+      }
+    ],
+    "floating_point_range_notes": [
+      {
+        "model": "resnet50",
+        "stage": "stage2",
+        "epoch": 16,
+        "metric": "auc",
+        "value": 1.0000001192092896
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "model_name": "resnet50",
+  "stage": "stage2",
+  "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/best.keras",
+  "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/last.keras",
+  "best_epoch": 18,
+  "completed_epochs": 20,
+  "best_val_loss": 0.012716665863990784,
+  "best_epoch_metrics": {
+    "accuracy": 0.9979715943336487,
+    "auc": 0.9999833106994629,
+    "loss": 0.004449885338544846,
+    "precision": 1.0,
+    "recall": 0.9963898658752441,
+    "val_accuracy": 1.0,
+    "val_auc": 1.0,
+    "val_loss": 0.012716665863990784,
+    "val_precision": 1.0,
+    "val_recall": 1.0,
+    "learning_rate": 1.249999968422344e-05
+  },
+  "history_path": "/kaggle/working/artifacts/runs/development/histories/resnet50/stage2/history.json",
+  "contract_hash": "1abce5e3aecf18ab4f97f30371af1aee5580d419047969f40bcc23530b95156e",
+  "tensorflow_version": "2.21.0",
+  "keras_version": "3.13.2"
+}

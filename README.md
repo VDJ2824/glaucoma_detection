@@ -2,7 +2,7 @@
 
 A modular B.Tech CSE major-project scaffold for a lightweight, explainable, privacy-preserving retinal fundus image classification research prototype. Planned inference runs locally in the browser; optional Gemini-generated analytical text is requested through Flask.
 
-**Current status:** the dataset foundation and Phase 3 core CNN construction/two-stage transfer learning are implemented and unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Ensemble inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
+**Current status:** individual two-stage Kaggle training is complete for MobileNetV2, EfficientNetB0 and ResNet50, with supplied results archived under `docs/experiments/`. The dataset foundation and Phase 3 training implementation are unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Ensemble inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
 
 Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For read-only exploration, install `requirements-dev.txt`, confirm the selected filename/folder/CSV label mode, refresh notebook 00 and run notebook 01. The preparation command is a separate opt-in step that assigns splits; leave it for the preparation phase. Run `python -m pytest -q` for synthetic-data tests.
 
@@ -163,20 +163,29 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 
 Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 for validation analysis, then 05 to freeze ensemble weights; return to 04 for final test evaluation. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
 
-All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints or full training histories are bundled; the reported MobileNetV2 validation summaries and metric curve are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
+All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints are bundled. Full supplied CSV/JSON histories, stage summaries, selections and original graphs for all three models are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
 
-## Recorded MobileNetV2 Kaggle experiment
+## Completed individual-model training
 
-The completed 26 November 2026 Kaggle run used Python 3.13.16, TensorFlow 2.21.0 and Keras 3.13.2. At each stage's best validation-loss epoch:
+All three core models completed Stage 1 head training and Stage 2 fine-tuning on Kaggle. The user-supplied result archive has been organized under [docs/experiments](docs/experiments/README.md), preserving all six epoch CSVs, six JSON histories, six stage metric summaries, three checkpoint selections and three original PNG graphs byte-for-byte. The earlier MobileNetV2 account remains unchanged and now has a full-history addendum. No datasets, model weights or source ZIPs are included.
 
-| Stage | Best epoch | Completed epochs | Validation loss | Validation accuracy | Validation ROC-AUC |
+The selections all choose Stage 2 by minimum validation loss:
+
+| Model | Selected stage epoch | Stage 2 completed epochs | Validation loss | Validation accuracy | Validation ROC-AUC |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Stage 1 | 10 | 10 | 0.140319 | 97.1698% | 0.997464 |
-| Stage 2 (selected) | 9 | 14 | 0.038979 | 99.0566% | 0.999638 |
+| MobileNetV2 | 9 | 14 | 0.038979 | 99.0566% | 0.999637604 |
+| EfficientNetB0 | 18 | 20 | 0.014796 | 100.0000% | 0.999999940 |
+| ResNet50 | 18 | 20 | 0.012717 | 100.0000% | 1.000000000 |
 
-These are **reported validation results, not held-out test or clinical performance**. The [experiment record](docs/experiments/mobilenet_v2_kaggle_2026-11-26/README.md) preserves full summaries, provenance, logs and the original curve separately from reusable Notebook 03. No weights, dataset files or backup ZIPs are committed. Architecture, training and frozen partitions are unchanged.
+These are **validation-selected measurements, not held-out test results or clinical performance**. Perfect observed validation accuracy does not establish perfect generalization. See the [comparative report](docs/experiments/core_models_comparison_2026-11-27.md) for all Stage 1/Stage 2 training and validation metrics, fine-tuning deltas, epochs, checkpoint references, numerical notes and provenance. TensorFlow 2.21.0 and Keras 3.13.2 are recorded for all stage summaries; new-model Python/GPU details are not supplied by the archive.
 
-Notebook 03 now detects Kaggle before Colab, retains local defaults, and offers opt-in relocation of a frozen session/CSV to an attached flat image directory. It changes only derived image paths and storage paths; all source split assignments are preserved. Every training/download/setup flag remains disabled by default. See the [cross-platform setup details](docs/phase3-training.md#kaggle-portability-and-python-313).
+Verify artifact hashes, all 84 epoch rows, selections and derived values without TensorFlow or the source ZIP:
+
+```bash
+python scripts/verify_experiment_artifacts.py
+```
+
+Notebook 03 remains generic, output-free and safe to open: training/setup/download flags are disabled, `weights=None` is the offline default, and model selection uses a valid configurable core-model name. Kaggle-first detection, Python 3.13 support and opt-in frozen-path relocation are retained. The import does not retrain models, recalculate splits or alter architecture/training logic.
 
 ## Phase 3 training and CPU smoke tests
 
@@ -186,7 +195,7 @@ Notebook 03 supports its own Drive/repository setup and loads the existing sessi
 
 Stage 1 freezes the backbone and uses Adam/BCE at 0.001 for up to 10 epochs. Stage 2 restores the best Stage 1 checkpoint, unfreezes the last 20 layers excluding BatchNormalization and recompiles Adam at 0.0001 for up to 20 epochs. Existing normalization/augmentation code is unchanged, validation is never augmented, and training never reads test pixels or regenerates splits.
 
-The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. The reported MobileNetV2 validation run is documented above; held-out test performance and generalization remain unmeasured.
+The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. The reported individual-model validation runs are documented above; held-out test performance and generalization remain unmeasured.
 
 ## Configuration and training settings
 

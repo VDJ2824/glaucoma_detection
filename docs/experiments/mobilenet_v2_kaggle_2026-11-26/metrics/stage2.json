@@ -1,0 +1,26 @@
+{
+  "model_name": "mobilenet_v2",
+  "stage": "stage2",
+  "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+  "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/last.keras",
+  "best_epoch": 9,
+  "completed_epochs": 14,
+  "best_val_loss": 0.03897889703512192,
+  "best_epoch_metrics": {
+    "accuracy": 0.9837728142738342,
+    "auc": 0.9994317889213562,
+    "loss": 0.03698784485459328,
+    "precision": 0.9855595827102661,
+    "recall": 0.9855595827102661,
+    "val_accuracy": 0.9905660152435303,
+    "val_auc": 0.9996376037597656,
+    "val_loss": 0.03897889703512192,
+    "val_precision": 1.0,
+    "val_recall": 0.9833333492279053,
+    "learning_rate": 4.999999873689376e-05
+  },
+  "history_path": "/kaggle/working/artifacts/runs/development/histories/mobilenet_v2/stage2/history.json",
+  "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019",
+  "tensorflow_version": "2.21.0",
+  "keras_version": "3.13.2"
+}

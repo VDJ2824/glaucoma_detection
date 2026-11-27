@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "import_date": "2026-11-27",
+  "archive_name": "core_models_results.zip",
+  "archive_sha256": "da2d59ed0580b4ae154919f1eb1b5ed5cc015ab23604f7fec64ec32b05d233c1",
+  "preservation": "All 24 approved CSV/JSON/PNG archive members copied byte-for-byte. Source archive, datasets and model weights are not committed.",
+  "date_note": "New EfficientNetB0/ResNet50 directory dates are import/record dates; exact training dates are not supplied.",
+  "model_directories": {
+    "mobilenet_v2": "docs/experiments/mobilenet_v2_kaggle_2026-11-26",
+    "efficientnet_b0": "docs/experiments/efficientnet_b0_kaggle_2026-11-27",
+    "resnet50": "docs/experiments/resnet50_kaggle_2026-11-27"
+  },
+  "files": [
+    {
+      "archive_member": "histories/efficientnet_b0/stage1/epochs.csv",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/histories/stage1/epochs.csv",
+      "bytes": 2254,
+      "sha256": "e8df40d93dec787ca7fc8e12d6ec588084c3af5efeb3728dea03639b345e51fb"
+    },
+    {
+      "archive_member": "histories/efficientnet_b0/stage1/history.json",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/histories/stage1/history.json",
+      "bytes": 2891,
+      "sha256": "84e8dd6771877c5a4bc95664c45221f51e6e03bf4941d8ca490d827fd99a9ba8"
+    },
+    {
+      "archive_member": "histories/efficientnet_b0/stage2/epochs.csv",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/histories/stage2/epochs.csv",
+      "bytes": 3906,
+      "sha256": "a3ea4d2b3876d872496244ca19e210642a4b79cff793fffc28eceed023821206"
+    },
+    {
+      "archive_member": "histories/efficientnet_b0/stage2/history.json",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/histories/stage2/history.json",
+      "bytes": 5053,
+      "sha256": "2b793c06dc2038a3d0552b6f4ad8d00422e45f247d2a5b3c87a8e05c17224f34"
+    },
+    {
+      "archive_member": "histories/mobilenet_v2/stage1/epochs.csv",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/histories/stage1/epochs.csv",
+      "bytes": 2165,
+      "sha256": "26e62e18fbe132995a273b4cbe7bbd84c934ffeabcf4d06941b6f147e05d2721"
+    },
+    {
+      "archive_member": "histories/mobilenet_v2/stage1/history.json",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/histories/stage1/history.json",
+      "bytes": 2802,
+      "sha256": "3af775a690234f35316ac854ca13cb2b3824e7d2ae46dcc7491fda43a864642c"
+    },
+    {
+      "archive_member": "histories/mobilenet_v2/stage2/epochs.csv",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/histories/stage2/epochs.csv",
+      "bytes": 2970,
+      "sha256": "998f264d0594153900073bc14122bf3562395ae0c2fff6a070139a9af5473677"
+    },
+    {
+      "archive_member": "histories/mobilenet_v2/stage2/history.json",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/histories/stage2/history.json",
+      "bytes": 3811,
+      "sha256": "7557e063ba4ac9b479166c9382a5443c5e73c5dea5e2ae8ad53f9f83d1ecb8fe"
+    },
+    {
+      "archive_member": "histories/resnet50/stage1/epochs.csv",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/histories/stage1/epochs.csv",
+      "bytes": 2256,
+      "sha256": "4dfbf581c5b83c99543b5559816bc733067a4d11b4b7c15a2e183a8372ac9772"
+    },
+    {
+      "archive_member": "histories/resnet50/stage1/history.json",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/histories/stage1/history.json",
+      "bytes": 2893,
+      "sha256": "9efdf03e5b2d1d2f79dc76ea465c77a1cafbb71ea058640cdd670cf0c434872a"
+    },
+    {
+      "archive_member": "histories/resnet50/stage2/epochs.csv",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/histories/stage2/epochs.csv",
+      "bytes": 3417,
+      "sha256": "10ed33a6836bb8b7fc339abd0c6b4565f3a08969fe7b80fca4fcacdcc75135d3"
+    },
+    {
+      "archive_member": "histories/resnet50/stage2/history.json",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/histories/stage2/history.json",
+      "bytes": 4563,
+      "sha256": "ce8aadfa996083954b93d62dfe699753f55ee3fd8f1ac9b7f7e09930155cc5fb"
+    },
+    {
+      "archive_member": "metrics/efficientnet_b0/selection.json",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/metrics/selection.json",
+      "bytes": 295,
+      "sha256": "96e574da8bfc4f2ac96b34916f4453106f11bca0e59af954c77392b520a8748d"
+    },
+    {
+      "archive_member": "metrics/efficientnet_b0/stage1.json",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/metrics/stage1.json",
+      "bytes": 1074,
+      "sha256": "05d08f1178e1adf69dfe62a3fd79d7f333e485e4138ecf7eb05ef67094ebef2f"
+    },
+    {
+      "archive_member": "metrics/efficientnet_b0/stage2.json",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/metrics/stage2.json",
+      "bytes": 1035,
+      "sha256": "ffaf019c6ea8448fba3e37818190f17a86723f7e3821dc2854f4429bf7995d5f"
+    },
+    {
+      "archive_member": "metrics/efficientnet_b0/training_history.png",
+      "repository_path": "docs/experiments/efficientnet_b0_kaggle_2026-11-27/metrics/training_history.png",
+      "bytes": 117788,
+      "sha256": "458ab61d52d94950e9239f0ab1c3dca2414240ef351ad7fdea254548ce69a2bd"
+    },
+    {
+      "archive_member": "metrics/mobilenet_v2/selection.json",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/metrics/selection.json",
+      "bytes": 290,
+      "sha256": "91cc76ff5f956c3c33a86042b86ae4f4653b285423e896b730a0b125317ab1b6"
+    },
+    {
+      "archive_member": "metrics/mobilenet_v2/stage1.json",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/metrics/stage1.json",
+      "bytes": 1048,
+      "sha256": "ac9a4b0332966fef08a898acdf623a7884214647f1f49d10c071fa4b1a8fb575"
+    },
+    {
+      "archive_member": "metrics/mobilenet_v2/stage2.json",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/metrics/stage2.json",
+      "bytes": 1049,
+      "sha256": "3e3129d70ad48b01f1f03236dd4eb8ec5cd91e64d12b62a7dc2b823b634d0b43"
+    },
+    {
+      "archive_member": "metrics/mobilenet_v2/training_history.png",
+      "repository_path": "docs/experiments/mobilenet_v2_kaggle_2026-11-26/metrics/training_history.png",
+      "bytes": 122935,
+      "sha256": "1b04f8d2633907ca31d13822d7f92d11f8602247686368a992916f3856dd39ea"
+    },
+    {
+      "archive_member": "metrics/resnet50/selection.json",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/metrics/selection.json",
+      "bytes": 288,
+      "sha256": "0f948e23970c5c88827ffd0cdb75ba8f95fe9cfb17e4efe7e03884dd8f22fdd3"
+    },
+    {
+      "archive_member": "metrics/resnet50/stage1.json",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/metrics/stage1.json",
+      "bytes": 1047,
+      "sha256": "79b7c88bcab67c33b4cd363ed5acb759bb39c7f7c3d83c6dac72cb13d167600c"
+    },
+    {
+      "archive_member": "metrics/resnet50/stage2.json",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/metrics/stage2.json",
+      "bytes": 977,
+      "sha256": "a1a9ea7ed2d361dfdc78d6813bfd2e4afa150180ef8cb6296ed78b24c85ae7f0"
+    },
+    {
+      "archive_member": "metrics/resnet50/training_history.png",
+      "repository_path": "docs/experiments/resnet50_kaggle_2026-11-27/metrics/training_history.png",
+      "bytes": 110781,
+      "sha256": "467089ad5a7400517bdc15a1a118da4d0abfb9ac1415fef3c632ad36e804efac"
+    }
+  ]
+}

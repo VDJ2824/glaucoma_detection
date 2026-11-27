@@ -1,0 +1,6 @@
+# Keep original experiment exports byte-for-byte across Git clients/checkouts.
+# Keras CSVLogger exports use CRLF; do not normalize them or flag CR as whitespace.
+docs/experiments/*/histories/*/epochs.csv -text whitespace=cr-at-eol
+docs/experiments/*/histories/*/history.json -text
+docs/experiments/*/metrics/*.json -text
+docs/experiments/*/metrics/*.png -text

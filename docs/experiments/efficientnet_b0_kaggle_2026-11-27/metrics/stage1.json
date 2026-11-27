@@ -1,0 +1,26 @@
+{
+  "model_name": "efficientnet_b0",
+  "stage": "stage1",
+  "best_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/efficientnet_b0/stage1/best.keras",
+  "last_checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/efficientnet_b0/stage1/last.keras",
+  "best_epoch": 9,
+  "completed_epochs": 10,
+  "best_val_loss": 0.2235301434993744,
+  "best_epoch_metrics": {
+    "accuracy": 0.9107505083084106,
+    "auc": 0.9678182601928711,
+    "loss": 0.25576648116111755,
+    "precision": 0.9145907759666443,
+    "recall": 0.9277978539466858,
+    "val_accuracy": 0.9433962106704712,
+    "val_auc": 0.9858695268630981,
+    "val_loss": 0.2235301434993744,
+    "val_precision": 0.9354838728904724,
+    "val_recall": 0.9666666388511658,
+    "learning_rate": 0.0010000000474974513
+  },
+  "history_path": "/kaggle/working/artifacts/runs/development/histories/efficientnet_b0/stage1/history.json",
+  "contract_hash": "e02e949b0b918c8f2984b426c90f64a14de5c4c2dda4a6e925720249af38b612",
+  "tensorflow_version": "2.21.0",
+  "keras_version": "3.13.2"
+}

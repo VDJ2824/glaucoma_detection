@@ -1,0 +1,8 @@
+{
+  "stage": "stage2",
+  "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/best.keras",
+  "val_loss": 0.012716665863990784,
+  "epoch": 18,
+  "complete": true,
+  "contract_hash": "1abce5e3aecf18ab4f97f30371af1aee5580d419047969f40bcc23530b95156e"
+}

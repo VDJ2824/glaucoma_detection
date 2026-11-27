@@ -1,0 +1,8 @@
+{
+  "stage": "stage2",
+  "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+  "val_loss": 0.03897889703512192,
+  "epoch": 9,
+  "complete": true,
+  "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019"
+}
