@@ -30,6 +30,8 @@ def test_real_core_factory_forward_offline(name):
     assert not get_backbone(model).trainable
     assert len(model.layers)==5 # input, backbone, GAP, dropout, sigmoid (no double normalization)
     assert model.layers[-2].rate==.2 and model.layers[-1].activation==tf.keras.activations.sigmoid
+    from glaucoma.evaluation.checkpoints import verify_model_identity
+    assert len(verify_model_identity(model,name))==64
     output=model(tf.zeros((1,224,224,3)),training=False).numpy()
     assert output.shape==(1,1) and np.isfinite(output).all() and ((output>=0)&(output<=1)).all()
     assert any(isinstance(x,tf.keras.layers.Rescaling) for x in get_backbone(model).layers)==(name=='efficientnet_b0')

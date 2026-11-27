@@ -72,3 +72,23 @@ def test_training_notebook_defaults_do_not_construct_or_fit(tmp_path, monkeypatc
             exec(compile(''.join(cell['source']),'03_individual_model_training','exec'),namespace)
     assert set(tmp_path.rglob('*'))==before
     assert namespace['model'] is None and not namespace['RUN_STAGE1'] and not namespace['RUN_STAGE2']
+
+
+def test_phase4_notebook_default_has_no_checkpoint_or_prediction_calls(tmp_path,monkeypatch):
+    from glaucoma.evaluation import workflow,checkpoints
+    def forbidden(*args,**kwargs):
+        raise AssertionError('Phase 4 notebook defaults must not load checkpoints or infer')
+    for name in ('run_validation','run_final_test'):
+        monkeypatch.setattr(workflow,name,forbidden)
+    monkeypatch.setattr(checkpoints,'verify_selected_checkpoints',forbidden)
+    cfg=configure_workspace(ROOT/'configs/project.yaml',tmp_path/'missing-data',tmp_path/'drive')
+    session=save_session(cfg,tmp_path/'drive/session.json')
+    monkeypatch.setenv('GLAUCOMA_SESSION',str(session))
+    notebook=json.loads((ROOT/'notebooks/04_model_evaluation.ipynb').read_text())
+    namespace={}
+    before=set(tmp_path.rglob('*'))
+    for cell in notebook['cells']:
+        if cell['cell_type']=='code':exec(compile(''.join(cell['source']),'04_model_evaluation','exec'),namespace)
+    assert set(tmp_path.rglob('*'))==before
+    for key in ('RUN_PLATFORM_SETUP','CLONE_REPOSITORY','INSTALL_DEPENDENCIES','VERIFY_CHECKPOINTS','RUN_VALIDATION','RUN_FINAL_TEST','SHOW_SAVED_TABLES'):
+        assert namespace[key] is False

@@ -1,6 +1,6 @@
 # Colab and Kaggle notebooks
 
-These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exploration (01) and environment setup are implemented; Phase 3 training (03) is implemented with explicit opt-in flags; evaluation, ensemble, Grad-CAM and conversion remain documented scaffolds. Training starts only when explicitly enabled in 03; no notebook downloads datasets. Notebook 01 now performs read-only exploration when run; it requires an existing dataset. The preparation call in 02 is disabled until you explicitly enable it.
+These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exploration (01) and environment setup are implemented; Phase 3 training (03) is implemented with explicit opt-in flags; Phase 4 evaluation/ensembles (04) is implemented with separate validation and final-test flags; Grad-CAM and conversion remain documented scaffolds. Training starts only when explicitly enabled in 03; no notebook downloads datasets. Notebook 01 now performs read-only exploration when run; it requires an existing dataset. The preparation call in 02 is disabled until you explicitly enable it.
 
 | Notebook | Purpose |
 | --- | --- |
@@ -8,13 +8,13 @@ These notebooks orchestrate `src/glaucoma` modules. Dataset tools, read-only exp
 | `01_dataset_exploration.ipynb` | Implemented class/dimension summaries, RGB sample plots and duplicate/corruption checks |
 | `02_dataset_preparation.ipynb` | Opt-in shared validation, deduplication, split preparation and preprocessing inspection |
 | `03_individual_model_training.ipynb` | Implemented independent setup, opt-in two-stage training, histories and checkpoint recovery |
-| `04_model_evaluation.ipynb` | Future validation analysis and final held-out evaluation |
+| `04_model_evaluation.ipynb` | Implemented checkpoint verification, deterministic inference, validation weight search/freeze, and separate final test evaluation |
 | `05_ensemble_optimization.ipynb` | Future core-only ensemble weight selection on validation data |
 | `06_gradcam_analysis.ipynb` | Future individual core Grad-CAM and equal/weighted fusion |
 | `07_cross_dataset_validation.ipynb` | Future external validation after verified adapters exist |
 | `08_tensorflowjs_conversion.ipynb` | Future isolated core-only conversion and browser parity checks |
 
-Start with 00 → 01 → 02 → 03 → 04 (validation only) → 05 → 04 (frozen final test evaluation) → 06 → 07 → 08. Train each core model independently at 03. Optional VGG experiments never gate this sequence or enter the application.
+Start with 00 → 01 → 02 → 03 → 04 (validation inference/search/freeze) → 04 (separate frozen final test evaluation) → 06 → 07 → 08. Train each core model independently at 03. Optional VGG experiments never gate this sequence or enter the application.
 
 ## Independent kernels
 
@@ -49,3 +49,5 @@ Dependencies/cloning may require Internet, while dataset processing itself is lo
 See [Phase 3 instructions](../docs/phase3-training.md) for TensorFlow 2.20.x/2.21.x, Python 3.10–3.13, offline weights=None smoke tests and the frozen-manifest recovery contract. Existing notebook 00–02 edits are retained.
 
 The completed Kaggle MobileNetV2 run is preserved in [separate experiment documentation](../docs/experiments/mobilenet_v2_kaggle_2026-11-26/README.md). Notebook 03 has no executed outputs, automatic ZIP creation or enabled training flags.
+
+Phase 4: see [ensemble/evaluation guide](../docs/phase4-ensemble-evaluation.md). Notebook 05 is an optional later research scaffold; the implemented Notebook 04 already includes the predefined validation-only weight search. No real Phase 4 test results are bundled.

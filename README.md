@@ -2,7 +2,7 @@
 
 A modular B.Tech CSE major-project scaffold for a lightweight, explainable, privacy-preserving retinal fundus image classification research prototype. Planned inference runs locally in the browser; optional Gemini-generated analytical text is requested through Flask.
 
-**Current status:** individual two-stage Kaggle training is complete for MobileNetV2, EfficientNetB0 and ResNet50, with supplied results archived under `docs/experiments/`. The dataset foundation and Phase 3 training implementation are unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Ensemble inference, image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
+**Current status:** individual two-stage Kaggle training is complete for MobileNetV2, EfficientNetB0 and ResNet50, with supplied results archived under `docs/experiments/`. The dataset foundation and Phase 3 training implementation are unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Phase 4 checkpoint-verified inference, validation-only ensemble selection and frozen-protocol evaluation are implemented; actual Phase 4 validation/test execution still requires the private Kaggle checkpoints. Image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
 
 Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For read-only exploration, install `requirements-dev.txt`, confirm the selected filename/folder/CSV label mode, refresh notebook 00 and run notebook 01. The preparation command is a separate opt-in step that assigns splits; leave it for the preparation phase. Run `python -m pytest -q` for synthetic-data tests.
 
@@ -155,15 +155,15 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 | `01_dataset_exploration.ipynb` | Implemented read-only class/dimension analysis, samples and integrity checks |
 | `02_dataset_preparation.ipynb` | Documented shared dataset pipeline; processing explicitly opt-in |
 | `03_individual_model_training.ipynb` | Implemented opt-in independent two-stage training, offline smoke tests and checkpoint recovery |
-| `04_model_evaluation.ipynb` | Scaffold for validation analysis and final held-out metrics |
+| `04_model_evaluation.ipynb` | Implemented validation-only ensemble selection, protocol freeze and separate final test opt-in |
 | `05_ensemble_optimization.ipynb` | Scaffold for validation-only core ensemble weight selection |
 | `06_gradcam_analysis.ipynb` | Scaffold for individual and ensemble core explanations |
 | `07_cross_dataset_validation.ipynb` | Scaffold pending verified external-dataset adapters |
 | `08_tensorflowjs_conversion.ipynb` | Scaffold for isolated core conversion and browser parity |
 
-Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 for validation analysis, then 05 to freeze ensemble weights; return to 04 for final test evaluation. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
+Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 for validation predictions, predefined weight selection and freezing; rerun 04 with validation disabled and a separate final-test opt-in. Notebook 05 remains an optional future research scaffold and is not required by the implemented Phase 4 workflow. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
 
-All core logic stays in reusable Python modules. Notebook 03 is implemented; later analysis/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints are bundled. Full supplied CSV/JSON histories, stage summaries, selections and original graphs for all three models are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
+All core logic stays in reusable Python modules. Notebooks 03 and 04 are implemented; later explainability/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints are bundled. Full supplied CSV/JSON histories, stage summaries, selections and original graphs for all three models are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
 
 ## Completed individual-model training
 
@@ -197,6 +197,16 @@ Stage 1 freezes the backbone and uses Adam/BCE at 0.001 for up to 10 epochs. Sta
 
 The trainer includes EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, CSVLogger, per-model/stage JSON histories, validation-selected best checkpoints and epoch-boundary recovery with configuration/manifest checks. The reported individual-model validation runs are documented above; held-out test performance and generalization remain unmeasured.
 
+## Phase 4: ensemble learning and performance evaluation
+
+[Notebook 04](notebooks/04_model_evaluation.ipynb) now orchestrates checkpoint verification, deterministic image-aligned individual scores, majority voting, equal soft voting and weighted soft voting. The existing checkpoint selection/recovery and preprocessing functions are reused. It requires actual private `.keras` checkpoints plus both stages' `state.json`/`contract.json`, the original frozen manifest and saved session; the committed summaries alone are insufficient.
+
+Weights are selected on validation predictions only using a predefined 0.05-step simplex grid plus exact equal weights (232 candidates), minimizing validation BCE with deterministic ties. The default threshold is fixed at 0.5, not tuned. Weights, threshold, manifest/checkpoint/contract/graph fingerprints and inference settings are sealed before the separate final-test function can access test images. No Phase 4 experimental scores are shipped or claimed; ensembles are not assumed to outperform individuals.
+
+Enabled runs save individual/aligned predictions and ground truth, candidate searches, frozen configuration, comparative metrics, confusion matrices, score-based ROC curves and disagreement analysis beneath `<artifact-root>/phase4/<name>`. Hard majority voting has no probability-based BCE/AUC; undefined metrics are explicitly null. All execution flags default to False. The output-free notebook supports Kaggle, Colab and local execution without retraining or resplitting.
+
+See [the Phase 4 guide](docs/phase4-ensemble-evaluation.md) for private checkpoint layout, original-path contract compatibility, safe portability, the one-attempt test gate, artifact layout and image-level/single-dataset limitations. Existing validation training records are distinct from future untouched-test results.
+
 ## Configuration and training settings
 
 `configs/project.yaml` is the central source of truth and replaces the original JSON scaffolds. It sets the three core models, optional baselines, 224×224×3 inputs, batch size 16, seed 42, 70/15/15 splits, classification head, preprocessing, augmentation, checkpoints and early stopping. Stage 1 is 10 epochs at 0.001; stage 2 is 20 epochs at 0.0001 with selective fine-tuning and frozen batch normalization. These settings are not validated hyperparameters.
@@ -205,7 +215,7 @@ Dataset paths resolve relative to the config's project root. Export `DATASET_ROO
 
 `scripts/train_core.py` now supports explicit opt-in core training from a saved session and frozen CSV. Evaluation/export scripts remain disabled. `scripts/prepare_dataset.py` remains a separate preparation entry point and is never called during training. VGG experiments remain optional; only core models are intended for browser export and the application. Use the separate conversion requirements later and validate exact compatibility.
 
-Ensemble weights are not yet configured; validation-based weight selection remains future work. Equal and weighted heatmap fusion are both planned, with the ensemble heatmap as the main web visualization. Do not invent trained weights, thresholds or performance results.
+Experimental ensemble weights are intentionally unset in central training configuration; Phase 4 selects and freezes them from actual validation predictions in a separate immutable run artifact. Equal and weighted heatmap fusion are both planned, with the ensemble heatmap as the main web visualization. Do not invent trained weights, thresholds or performance results.
 
 ## Privacy and reports
 
