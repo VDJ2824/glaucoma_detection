@@ -1,4 +1,4 @@
-# Individual core-model experiment records
+# Core-model and ensemble experiment records
 
 All three core models have completed two-stage Kaggle training, as reported by the user and recorded in the supplied metrics/selection artifacts. This directory contains analytical documentation and original CSV/JSON/PNG result artifacts only, without datasets, weights or source ZIPs.
 
@@ -18,4 +18,12 @@ Run the repository's read-only verifier to check hashes, 84 epoch records, summa
 
 ```bash
 python scripts/verify_experiment_artifacts.py
+```
+
+## Phase 4 evaluation completed
+
+[Validation and held-out test comparative report](phase4_kaggle_2026-11-27/README.md) covers all six methods, the original frozen configuration, aggregate metrics, original confusion matrices/ROC plots and the privacy review. These held-out test results are distinct from the validation-selected training measurements above. Equal-weight voting matched the best individual test accuracy and had the lowest test BCE and highest ROC-AUC; the validation-optimized mixture performed worse on test. No weights were changed. Per-image predictions and fine-grained ROC score exports are withheld.
+
+```bash
+python scripts/verify_phase4_artifacts.py
 ```

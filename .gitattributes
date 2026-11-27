@@ -4,3 +4,9 @@ docs/experiments/*/histories/*/epochs.csv -text whitespace=cr-at-eol
 docs/experiments/*/histories/*/history.json -text
 docs/experiments/*/metrics/*.json -text
 docs/experiments/*/metrics/*.png -text
+
+# Preserve supplied Phase 4 aggregate exports and sealed provenance bytes.
+docs/experiments/phase4_kaggle_2026-11-27/**/*.csv -text whitespace=cr-at-eol
+docs/experiments/phase4_kaggle_2026-11-27/**/*.json -text
+docs/experiments/phase4_kaggle_2026-11-27/*.json -text
+docs/experiments/phase4_kaggle_2026-11-27/**/*.png -text

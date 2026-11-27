@@ -1,0 +1,29 @@
+{
+  "n": 106,
+  "unanimous_count": 94,
+  "nonunanimous_count": 12,
+  "nonunanimous_fraction": 0.11320754716981132,
+  "pairwise": [
+    {
+      "model_a": "mobilenet_v2",
+      "model_b": "efficientnet_b0",
+      "disagree_count": 8,
+      "disagree_fraction": 0.07547169811320754,
+      "both_wrong_count": 1
+    },
+    {
+      "model_a": "mobilenet_v2",
+      "model_b": "resnet50",
+      "disagree_count": 8,
+      "disagree_fraction": 0.07547169811320754,
+      "both_wrong_count": 2
+    },
+    {
+      "model_a": "efficientnet_b0",
+      "model_b": "resnet50",
+      "disagree_count": 8,
+      "disagree_fraction": 0.07547169811320754,
+      "both_wrong_count": 3
+    }
+  ]
+}

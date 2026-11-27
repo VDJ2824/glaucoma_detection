@@ -1,0 +1,6 @@
+{
+  "frozen_seal": "884714192aab6a082fefd35d72b12a013721a00a3c6f7c90bd24c916739b3b3d",
+  "partition": "test",
+  "n": 106,
+  "note": "Fixed protocol evaluated; no guarantee that an ensemble outperforms individual models."
+}

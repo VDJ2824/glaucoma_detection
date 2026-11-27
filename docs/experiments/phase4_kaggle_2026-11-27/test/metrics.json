@@ -1,0 +1,162 @@
+{
+  "split": "test",
+  "threshold": 0.5,
+  "methods": {
+    "mobilenet_v2": {
+      "n": 106,
+      "accuracy": 0.9622641509433962,
+      "precision": 1.0,
+      "recall": 0.9322033898305084,
+      "specificity": 1.0,
+      "f1": 0.9649122807017544,
+      "tn": 47,
+      "fp": 0,
+      "fn": 4,
+      "tp": 55,
+      "confusion_matrix": [
+        [
+          47,
+          0
+        ],
+        [
+          4,
+          55
+        ]
+      ],
+      "roc_auc": 0.9956725567976921,
+      "binary_crossentropy": 0.12407261301739034,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "efficientnet_b0": {
+      "n": 106,
+      "accuracy": 0.9433962264150944,
+      "precision": 0.9818181818181818,
+      "recall": 0.9152542372881356,
+      "specificity": 0.9787234042553191,
+      "f1": 0.9473684210526315,
+      "tn": 46,
+      "fp": 1,
+      "fn": 5,
+      "tp": 54,
+      "confusion_matrix": [
+        [
+          46,
+          1
+        ],
+        [
+          5,
+          54
+        ]
+      ],
+      "roc_auc": 0.98918139199423,
+      "binary_crossentropy": 0.1680835868365033,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "resnet50": {
+      "n": 106,
+      "accuracy": 0.9245283018867925,
+      "precision": 0.9322033898305084,
+      "recall": 0.9322033898305084,
+      "specificity": 0.9148936170212766,
+      "f1": 0.9322033898305084,
+      "tn": 43,
+      "fp": 4,
+      "fn": 4,
+      "tp": 55,
+      "confusion_matrix": [
+        [
+          43,
+          4
+        ],
+        [
+          4,
+          55
+        ]
+      ],
+      "roc_auc": 0.9801658853227551,
+      "binary_crossentropy": 0.3179951585631421,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "majority_voting": {
+      "n": 106,
+      "accuracy": 0.9622641509433962,
+      "precision": 1.0,
+      "recall": 0.9322033898305084,
+      "specificity": 1.0,
+      "f1": 0.9649122807017544,
+      "tn": 47,
+      "fp": 0,
+      "fn": 4,
+      "tp": 55,
+      "confusion_matrix": [
+        [
+          47,
+          0
+        ],
+        [
+          4,
+          55
+        ]
+      ],
+      "roc_auc": null,
+      "binary_crossentropy": null,
+      "undefined_metrics": [],
+      "score_metrics_note": "Hard voting has no probability score: ROC-AUC/BCE not applicable."
+    },
+    "equal_soft_voting": {
+      "n": 106,
+      "accuracy": 0.9622641509433962,
+      "precision": 1.0,
+      "recall": 0.9322033898305084,
+      "specificity": 1.0,
+      "f1": 0.9649122807017544,
+      "tn": 47,
+      "fp": 0,
+      "fn": 4,
+      "tp": 55,
+      "confusion_matrix": [
+        [
+          47,
+          0
+        ],
+        [
+          4,
+          55
+        ]
+      ],
+      "roc_auc": 0.99639379733141,
+      "binary_crossentropy": 0.10266725359724482,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "weighted_soft_voting": {
+      "n": 106,
+      "accuracy": 0.9245283018867925,
+      "precision": 0.9473684210526315,
+      "recall": 0.9152542372881356,
+      "specificity": 0.9361702127659575,
+      "f1": 0.9310344827586207,
+      "tn": 44,
+      "fp": 3,
+      "fn": 5,
+      "tp": 54,
+      "confusion_matrix": [
+        [
+          44,
+          3
+        ],
+        [
+          5,
+          54
+        ]
+      ],
+      "roc_auc": 0.98557518932564,
+      "binary_crossentropy": 0.1909555663757835,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    }
+  }
+}

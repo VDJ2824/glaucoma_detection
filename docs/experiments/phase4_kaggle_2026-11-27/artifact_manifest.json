@@ -1,0 +1,247 @@
+{
+  "record_date": "2026-11-27",
+  "source_archive": "phase4_evaluation_results.zip",
+  "source_sha256": "986d3190f9e5157cf8b43d031ca3e32b80dc296cc6288b9cbf4b7f0c40fd6bf4",
+  "verification_scope": "Private source predictions checked in memory against aggregate metrics, validation-only weight selection and disagreement counts; no model inference or fitting.",
+  "files": [
+    {
+      "archive_member": "test_complete.json",
+      "bytes": 223,
+      "sha256": "5cb92f1d3aaeed77e81a6516d480aa057e552b520b3a1ca854e0c9b7b9833c9b",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation_predictions.json",
+      "bytes": 6100,
+      "sha256": "238222283bac10b45fa079736c0aac77e2f390c1db6ed3ee937abc354aa8354c",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "predefined_protocol.json",
+      "bytes": 427,
+      "sha256": "a5b79b96cb250ebae0bbfe2642d0d7be2e18c4620df4ac01e266d8a5606aa30d",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test_started.json",
+      "bytes": 123,
+      "sha256": "a06726e4056bc5f16fdb56d3565fea7367b1b444d65834dd9e3bbe55c61461ba",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "frozen_ensemble.json",
+      "bytes": 6381,
+      "sha256": "cc2c6272cc295fca9d0d47b0c37e2b5ab885d9536f073fd509331818c6648650",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/confusion_matrices.png",
+      "bytes": 52337,
+      "sha256": "923ad0e530b964463ae52a8f0b47f8c6d7b51f8c8678225345b3ef04a5de6db9",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/roc_curves.png",
+      "bytes": 77320,
+      "sha256": "1bc1af46aa9d080738edb3bbce3dc22476c48db91cb9b342f55016cbb2f38427",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/metrics_comparison.csv",
+      "bytes": 935,
+      "sha256": "67f45a28260e7811c4aa06577832605c3853f6a2bf13873c5dfbeb7fdc2bfda8",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/aligned_predictions.csv",
+      "bytes": 9621,
+      "sha256": "6722222332c56d07a6b3fbe49752ba0bff00c22b9139bab104fc0867a8379325",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/all_strategy_predictions.csv",
+      "bytes": 21539,
+      "sha256": "27fc03ba0458172d3bcd031289c4706ebd8f69b25715629b30c2910f6d1302f7",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/disagreement_summary.json",
+      "bytes": 680,
+      "sha256": "a0cd5a91e5b01dfc86779daf4b37d94334d8d9040ec555d40933cd2c9b045bdc",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/prediction_disagreement.csv",
+      "bytes": 5136,
+      "sha256": "9c20b95cb63416824ab9f7107de136dbb17b131033747fb9e394adacf2daf654",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/roc_points.csv",
+      "bytes": 31619,
+      "sha256": "e4aa9aceaddf6607f5902f4d12c8f25167de3ddcb4f5cc21c99463eda1262ca5",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/metrics.json",
+      "bytes": 3455,
+      "sha256": "df2c2133964f870760e37c02d790cc8e7b3e658f0d99bb996f643358ff4f5f6b",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "test/individual_predictions/efficientnet_b0.csv",
+      "bytes": 5580,
+      "sha256": "e9d06f1e8596e9cc1504d8aef8cfc7b7926cdfc5199aa641f6321248c5f78be4",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/individual_predictions/resnet50.csv",
+      "bytes": 5321,
+      "sha256": "b9736e202ae25d50d2e01e275483f9a78b1228fb1beee3aabbff89f9f698f47c",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "test/individual_predictions/mobilenet_v2.csv",
+      "bytes": 5576,
+      "sha256": "0091c3dee0cb78d18e21e56991beb39d9c536164b91f9083fdf3fe42a6badf78",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/confusion_matrices.png",
+      "bytes": 25085,
+      "sha256": "6da9dd9e1d386870e19f49754fde443754c7f2dea2fde29a175e841bf83db5e8",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/weight_search.csv",
+      "bytes": 14320,
+      "sha256": "788ef0e754bb0bd0c99092fe48634feac6a78b698a40f39d97c46cebd6dd81d4",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/individual_strategy_predictions.csv",
+      "bytes": 17334,
+      "sha256": "138cc8b9b3f828d27318b609531f9f09bb0972e2676698754bafea4f9ffacd69",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/roc_curves.png",
+      "bytes": 61539,
+      "sha256": "baef3779e1aec5b109f72fd55a67cf65d0cb90e516eacebd0b9f9c46e90dfb39",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/metrics_comparison.csv",
+      "bytes": 365,
+      "sha256": "18a264e1b768fe15ffe93cba86a596f458735d8235f97ca981c4c2d1df1c1497",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/aligned_predictions.csv",
+      "bytes": 10350,
+      "sha256": "5ae998d61ee23f997edffeab40affc94c8c5bc59b28cb3197cfd14014691f0de",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/roc_points.csv",
+      "bytes": 16091,
+      "sha256": "7a9679f4129ef972be485314eff3c821643ffc9e57dbb23a4e1cc71795b584c4",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/metrics.json",
+      "bytes": 1581,
+      "sha256": "a3af553870582119f73f5e6a479c3ab1123a9351fa895f0cba1f508bbe0c8fe7",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/ensemble/confusion_matrices.png",
+      "bytes": 51614,
+      "sha256": "adff5c34629f40d75d5ed3b681b4e55f7090427f4b23ee487bcbeeed26844653",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/ensemble/roc_curves.png",
+      "bytes": 72803,
+      "sha256": "83e2b36a47f9c1f9bbd79088944d987993bab8f5088bb4ca797eded7c8226b0a",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/ensemble/metrics_comparison.csv",
+      "bytes": 574,
+      "sha256": "119e8c59145ea44fabdeae213fcc3c55e24e0571c3c2b6281c27c07709ace169",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/ensemble/aligned_predictions.csv",
+      "bytes": 10350,
+      "sha256": "5ae998d61ee23f997edffeab40affc94c8c5bc59b28cb3197cfd14014691f0de",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/ensemble/all_strategy_predictions.csv",
+      "bytes": 22366,
+      "sha256": "05525155a0c1ed087b31a49814a110bc07f18175ece0bd1343e6b0eae5538a61",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/ensemble/disagreement_summary.json",
+      "bytes": 667,
+      "sha256": "732094e4d75d90fbf9abed9f9663cd8940dd6ae1f6bbe90f5a19f4e965438804",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/ensemble/prediction_disagreement.csv",
+      "bytes": 5763,
+      "sha256": "b869db14918016ea820e3ea2caee5b47d8ce616946a1ea06b0392ffea229e306",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/ensemble/roc_points.csv",
+      "bytes": 28787,
+      "sha256": "b8c38fa014c758089c571e3469ad54b688974592d1a8f8c5831773d8d8849545",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/ensemble/metrics.json",
+      "bytes": 3100,
+      "sha256": "539e22361ddd2449d857f94a17d7bc89ac546fb081d7a5cf0bb98b01b65ae730",
+      "disposition": "preserved"
+    },
+    {
+      "archive_member": "validation/individual_predictions/efficientnet_b0.csv",
+      "bytes": 6219,
+      "sha256": "5c89da864c222ffe73cce512302c8da649f2045a0113f91d12d9a9cb522eab87",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/individual_predictions/resnet50.csv",
+      "bytes": 6040,
+      "sha256": "381e7c85f72e514ca8e32ce7b571c359700ffa308fef79da74f717095ef7c265",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    },
+    {
+      "archive_member": "validation/individual_predictions/mobilenet_v2.csv",
+      "bytes": 6223,
+      "sha256": "a95daf614b6bd3e42bc543d80f8f99d3159f3e4198603982e125b0941545f06f",
+      "disposition": "withheld",
+      "reason": "Image-linked predictions/annotations or fine-grained ROC score thresholds; retained only in private source ZIP."
+    }
+  ]
+}

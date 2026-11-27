@@ -1,0 +1,162 @@
+{
+  "split": "validation",
+  "threshold": 0.5,
+  "methods": {
+    "mobilenet_v2": {
+      "n": 106,
+      "accuracy": 0.9905660377358491,
+      "precision": 1.0,
+      "recall": 0.9833333333333333,
+      "specificity": 1.0,
+      "f1": 0.9915966386554622,
+      "tn": 46,
+      "fp": 0,
+      "fn": 1,
+      "tp": 59,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          1,
+          59
+        ]
+      ],
+      "roc_auc": 0.9996376811594203,
+      "binary_crossentropy": 0.038978785231002365,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "efficientnet_b0": {
+      "n": 106,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "specificity": 1.0,
+      "f1": 1.0,
+      "tn": 46,
+      "fp": 0,
+      "fn": 0,
+      "tp": 60,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "roc_auc": 1.0,
+      "binary_crossentropy": 0.014796094972515895,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "resnet50": {
+      "n": 106,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "specificity": 1.0,
+      "f1": 1.0,
+      "tn": 46,
+      "fp": 0,
+      "fn": 0,
+      "tp": 60,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "roc_auc": 1.0,
+      "binary_crossentropy": 0.012716728239957873,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "majority_voting": {
+      "n": 106,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "specificity": 1.0,
+      "f1": 1.0,
+      "tn": 46,
+      "fp": 0,
+      "fn": 0,
+      "tp": 60,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "roc_auc": null,
+      "binary_crossentropy": null,
+      "undefined_metrics": [],
+      "score_metrics_note": "Hard voting has no probability score: ROC-AUC/BCE not applicable."
+    },
+    "equal_soft_voting": {
+      "n": 106,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "specificity": 1.0,
+      "f1": 1.0,
+      "tn": 46,
+      "fp": 0,
+      "fn": 0,
+      "tp": 60,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "roc_auc": 1.0,
+      "binary_crossentropy": 0.019847892685185196,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    },
+    "weighted_soft_voting": {
+      "n": 106,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "specificity": 1.0,
+      "f1": 1.0,
+      "tn": 46,
+      "fp": 0,
+      "fn": 0,
+      "tp": 60,
+      "confusion_matrix": [
+        [
+          46,
+          0
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "roc_auc": 1.0,
+      "binary_crossentropy": 0.012632421744333497,
+      "undefined_metrics": [],
+      "score_metrics_note": null
+    }
+  }
+}

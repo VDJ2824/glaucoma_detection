@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "status": "individual_validation_complete",
+  "partition": "validation",
+  "members": [
+    "mobilenet_v2",
+    "efficientnet_b0",
+    "resnet50"
+  ],
+  "individual_threshold": 0.5,
+  "manifest_sha256": "9420bbb997d647d50276e028ab5e4206387e2509092ffaa0c417bcaec230ee53",
+  "inference_contract": {
+    "input_shape": [
+      224,
+      224,
+      3
+    ],
+    "preprocessing": {
+      "color": "RGB",
+      "resize": "letterbox",
+      "pad_value": 0,
+      "normalization": "model_specific",
+      "clahe": {
+        "enabled": false,
+        "clip_limit": 2.0,
+        "tile_grid_size": [
+          8,
+          8
+        ]
+      }
+    },
+    "dataset_name": "acrima",
+    "dataset_root": "/kaggle/input/datasets/varimadudeja/acrima-project-data/acrima-project-data/database",
+    "flat_image_root": "/kaggle/input/datasets/varimadudeja/acrima-project-data/acrima-project-data/database",
+    "seed": 42,
+    "batch_size": 16,
+    "class_mapping": {
+      "0": "non_glaucoma",
+      "1": "glaucoma"
+    },
+    "inference_training_argument": false
+  },
+  "checkpoints": {
+    "mobilenet_v2": {
+      "model_name": "mobilenet_v2",
+      "selection": {
+        "stage": "stage2",
+        "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+        "val_loss": 0.03897889703512192,
+        "epoch": 9,
+        "complete": true,
+        "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019"
+      },
+      "path": "/kaggle/working/artifacts/runs/development/checkpoints/core/mobilenet_v2/stage2/best.keras",
+      "checkpoint_sha256": "4e3b967ee98fadfa96081d7e81e011d3941e3a0c9395d6204a6c6576f0b2e0af",
+      "contract_hash": "c17f27a23a9db65edf86078755a4949d10471c49a6b2a606463b0e383d4ad019",
+      "training_manifest_sha256": "f9bf8375212d4412c2476526f1d3f7c20d23483a74905d0e16b562bc17b80be5",
+      "input_shape": [
+        224,
+        224,
+        3
+      ],
+      "preprocessing": {
+        "color": "RGB",
+        "resize": "letterbox",
+        "pad_value": 0,
+        "normalization": "model_specific",
+        "clahe": {
+          "enabled": false,
+          "clip_limit": 2.0,
+          "tile_grid_size": [
+            8,
+            8
+          ]
+        }
+      },
+      "class_mapping": {
+        "0": "non_glaucoma",
+        "1": "glaucoma"
+      },
+      "checkpoint_root": "/kaggle/working/artifacts/runs/development/checkpoints/core"
+    },
+    "efficientnet_b0": {
+      "model_name": "efficientnet_b0",
+      "selection": {
+        "stage": "stage2",
+        "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/efficientnet_b0/stage2/best.keras",
+        "val_loss": 0.014796104282140732,
+        "epoch": 18,
+        "complete": true,
+        "contract_hash": "e02e949b0b918c8f2984b426c90f64a14de5c4c2dda4a6e925720249af38b612"
+      },
+      "path": "/kaggle/working/artifacts/runs/development/checkpoints/core/efficientnet_b0/stage2/best.keras",
+      "checkpoint_sha256": "8fbf61ad9b0e6eea57061dfc46684da4e641fd15c6b08f4dcf2e33b70b42ce6e",
+      "contract_hash": "e02e949b0b918c8f2984b426c90f64a14de5c4c2dda4a6e925720249af38b612",
+      "training_manifest_sha256": "f9bf8375212d4412c2476526f1d3f7c20d23483a74905d0e16b562bc17b80be5",
+      "input_shape": [
+        224,
+        224,
+        3
+      ],
+      "preprocessing": {
+        "color": "RGB",
+        "resize": "letterbox",
+        "pad_value": 0,
+        "normalization": "model_specific",
+        "clahe": {
+          "enabled": false,
+          "clip_limit": 2.0,
+          "tile_grid_size": [
+            8,
+            8
+          ]
+        }
+      },
+      "class_mapping": {
+        "0": "non_glaucoma",
+        "1": "glaucoma"
+      },
+      "checkpoint_root": "/kaggle/working/artifacts/runs/development/checkpoints/core"
+    },
+    "resnet50": {
+      "model_name": "resnet50",
+      "selection": {
+        "stage": "stage2",
+        "checkpoint": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/best.keras",
+        "val_loss": 0.012716665863990784,
+        "epoch": 18,
+        "complete": true,
+        "contract_hash": "1abce5e3aecf18ab4f97f30371af1aee5580d419047969f40bcc23530b95156e"
+      },
+      "path": "/kaggle/working/artifacts/runs/development/checkpoints/core/resnet50/stage2/best.keras",
+      "checkpoint_sha256": "7cb6f1a8476dd3eb88d38005ec32e896311838a275fa467764157f704a1d4c3a",
+      "contract_hash": "1abce5e3aecf18ab4f97f30371af1aee5580d419047969f40bcc23530b95156e",
+      "training_manifest_sha256": "f9bf8375212d4412c2476526f1d3f7c20d23483a74905d0e16b562bc17b80be5",
+      "input_shape": [
+        224,
+        224,
+        3
+      ],
+      "preprocessing": {
+        "color": "RGB",
+        "resize": "letterbox",
+        "pad_value": 0,
+        "normalization": "model_specific",
+        "clahe": {
+          "enabled": false,
+          "clip_limit": 2.0,
+          "tile_grid_size": [
+            8,
+            8
+          ]
+        }
+      },
+      "class_mapping": {
+        "0": "non_glaucoma",
+        "1": "glaucoma"
+      },
+      "checkpoint_root": "/kaggle/working/artifacts/runs/development/checkpoints/core"
+    }
+  },
+  "model_graph_sha256": {
+    "mobilenet_v2": "44f6b156c40087369c60391bfb7f070f7cc2c7ca3512e81f32ce791280dc65ad",
+    "efficientnet_b0": "ee52f99598a490e4082c0a714a5ed68d1e034b5f6c7992457341457518a9ca56",
+    "resnet50": "9e73105d38861d327a2df0ed5305c26cb12503e587294def465098d6c74fad0b"
+  },
+  "prediction_files": {
+    "validation/aligned_predictions.csv": "5ae998d61ee23f997edffeab40affc94c8c5bc59b28cb3197cfd14014691f0de",
+    "validation/individual_predictions/mobilenet_v2.csv": "a95daf614b6bd3e42bc543d80f8f99d3159f3e4198603982e125b0941545f06f",
+    "validation/individual_predictions/efficientnet_b0.csv": "5c89da864c222ffe73cce512302c8da649f2045a0113f91d12d9a9cb522eab87",
+    "validation/individual_predictions/resnet50.csv": "381e7c85f72e514ca8e32ce7b571c359700ffa308fef79da74f717095ef7c265"
+  },
+  "seal_sha256": "9094c112895b0a8a27f8b78808671ce12df7637d3795018a72ea7515cd5fb59f"
+}
