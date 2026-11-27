@@ -111,3 +111,22 @@ def test_phase4_notebook_responsibilities_are_separate():
     assert not {'run_ensemble_validation','run_final_test','optimize_weights','freeze_validation','run_validation'} & calls['04_model_evaluation']
     assert {'run_ensemble_validation','run_final_test','load_saved_validation'} <= calls['05_ensemble_optimization']
     assert not {'run_model_validation','predict_partition','build_model','run_validation'} & calls['05_ensemble_optimization']
+
+
+def test_gradcam_notebook_defaults_never_inspect_or_explain(tmp_path,monkeypatch):
+    from glaucoma.explainability import workflow
+    def forbidden(*args,**kwargs):
+        raise AssertionError('Default Notebook 06 must not inspect private files or explain images')
+    for name in ('load_analysis_context','select_examples','run_explanations'):
+        monkeypatch.setattr(workflow,name,forbidden)
+    cfg=configure_workspace(ROOT/'configs/project.yaml',tmp_path/'missing-data',tmp_path/'drive')
+    session=save_session(cfg,tmp_path/'drive/session.json')
+    monkeypatch.setenv('GLAUCOMA_SESSION',str(session))
+    notebook=json.loads((ROOT/'notebooks/06_gradcam_analysis.ipynb').read_text())
+    namespace={};before=set(tmp_path.rglob('*'))
+    for cell in notebook['cells']:
+        if cell['cell_type']=='code':exec(compile(''.join(cell['source']),'06_gradcam_analysis','exec'),namespace)
+    assert all(namespace[key] is False for key in ('RUN_PLATFORM_SETUP','CLONE_REPOSITORY','INSTALL_DEPENDENCIES',
+                                                  'RUN_GRADCAM','ALLOW_TEST_ANALYSIS','INSPECT_SAVED_PREDICTIONS','SHOW_PRIVATE_PANELS'))
+    assert namespace['analysis_result'] is None
+    assert set(tmp_path.rglob('*'))==before

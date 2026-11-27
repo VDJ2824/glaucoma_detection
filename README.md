@@ -2,7 +2,7 @@
 
 A modular B.Tech CSE major-project scaffold for a lightweight, explainable, privacy-preserving retinal fundus image classification research prototype. Planned inference runs locally in the browser; optional Gemini-generated analytical text is requested through Flask.
 
-**Current status:** individual two-stage Kaggle training is complete for MobileNetV2, EfficientNetB0 and ResNet50, with supplied results archived under `docs/experiments/`. The dataset foundation and Phase 3 training implementation are unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Phase 4 checkpoint-verified inference, validation-only ensemble selection and frozen-protocol evaluation are implemented; actual Phase 4 validation and held-out test evaluation have completed on Kaggle, with aggregate results archived under `docs/experiments/`. Repeating inference requires the private Kaggle checkpoints. Image quality assessment, Grad-CAM, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
+**Current status:** individual two-stage Kaggle training is complete for MobileNetV2, EfficientNetB0 and ResNet50, with supplied results archived under `docs/experiments/`. The dataset foundation and Phase 3 training implementation are unit tested. Notebook 03 includes independent setup, offline smoke checks, explicit training flags, persistent histories/checkpoints and recovery. The frontend remains a landing placeholder and Flask provides a health endpoint with disabled reports. Phase 4 checkpoint-verified inference, validation-only ensemble selection and frozen-protocol evaluation are implemented; actual Phase 4 validation and held-out test evaluation have completed on Kaggle, with aggregate results archived under `docs/experiments/`. Repeating inference requires the private Kaggle checkpoints. Phase 5 inference-only Grad-CAM and equal/frozen-weight heatmap fusion are implemented in Notebook 06 with private artifact outputs and disabled defaults. Real retinal explanations still require explicit private execution. Image quality assessment, conversion, Gemini requests and PDFs remain unimplemented. No datasets or trained weights are bundled; nothing downloads or trains models automatically.
 
 Start with [ACRIMA organization and preparation instructions](docs/datasets.md). For read-only exploration, install `requirements-dev.txt`, confirm the selected filename/folder/CSV label mode, refresh notebook 00 and run notebook 01. The preparation command is a separate opt-in step that assigns splits; leave it for the preparation phase. Run `python -m pytest -q` for synthetic-data tests.
 
@@ -157,13 +157,13 @@ In folder mode, if the original folders differ, change `datasets.acrima.class_di
 | `03_individual_model_training.ipynb` | Implemented opt-in independent two-stage training, offline smoke tests and checkpoint recovery |
 | `04_model_evaluation.ipynb` | Individual-model validation predictions, metrics, confusion matrices/ROC and saved handoff |
 | `05_ensemble_optimization.ipynb` | Cached validation voting/weight search, ensemble freeze and separate final test of all methods |
-| `06_gradcam_analysis.ipynb` | Scaffold for individual and ensemble core explanations |
+| `06_gradcam_analysis.ipynb` | Implemented private individual core Grad-CAM, equal/frozen-weight fusion and comparative panels |
 | `07_cross_dataset_validation.ipynb` | Scaffold pending verified external-dataset adapters |
 | `08_tensorflowjs_conversion.ipynb` | Scaffold for isolated core conversion and browser parity |
 
 Start with 00 → 01 → 02 → 03. Repeat 03 independently for each core model. Use 04 only for individual-model validation predictions/reports. Use 05 to reuse those scores for voting, validation-only weight optimization and freezing; then run its separate final-test opt-in with ensemble learning disabled. Continue with 06 → 07 → 08. Test/external results must not drive weight or threshold selection. Optional VGG training stays separate and is never required. Notebook 08 will use a separate conversion environment; it does not install converters or export models yet.
 
-All core logic stays in reusable Python modules. Notebooks 03–05 are implemented; later explainability/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints are bundled. Full supplied CSV/JSON histories, stage summaries, selections and original graphs for all three models are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
+All core logic stays in reusable Python modules. Notebooks 03–06 are implemented; cross-dataset/conversion notebooks remain scaffolds and load saved session settings. See [notebook details and output contracts](notebooks/README.md). No trained checkpoints are bundled. Full supplied CSV/JSON histories, stage summaries, selections and original graphs for all three models are preserved separately in documentation. The trainer saves real run artifacts to the configured persistent paths; converted models remain future work.
 
 ## Completed individual-model training
 
@@ -207,6 +207,14 @@ Enabled runs save individual/aligned predictions and ground truth, candidate sea
 
 See [the Phase 4 guide](docs/phase4-ensemble-evaluation.md) for private checkpoint layout, original-path contract compatibility, safe portability, the one-attempt test gate, artifact layout and image-level/single-dataset limitations. Training validation records remain distinct from the now-archived held-out test measurements. Verify the Phase 4 archive with `python scripts/verify_phase4_artifacts.py`.
 
+## Phase 5: private Grad-CAM analysis
+
+[Notebook 06](notebooks/06_gradcam_analysis.ipynb) generates individual MobileNetV2, EfficientNetB0 and ResNet50 Grad-CAM, plus equal and frozen Phase 4 weighted **heatmap fusion**. Connected nested-backbone probes explain glaucoma/non-glaucoma signed logits using verified selected checkpoints and the unchanged preprocessing pipeline. Geometry-correct overlays remove letterbox padding first. Empty/nonfinite maps and score mismatches are handled explicitly; fusion is unavailable when any member is noninformative.
+
+Saved predictions select correct, incorrect and disagreement examples deterministically. Test explanations require a completed Phase 4 test run and separate post-hoc opt-in; they cannot be used to retune models, splits, thresholds or weights. All setup/inspection/generation/display flags default to False. Kaggle, Colab and local execution share reusable modules; private heatmaps, overlays, six-panel comparisons and provenance save under `cfg.artifacts.heatmaps/phase5/<name>/`. The public aggregate archive lacks the required private prediction CSVs.
+
+See the [Phase 5 guide](docs/phase5-gradcam.md) for paths, target layers, artifact schema, tests and limitations. Grad-CAM is neither segmentation nor clinical evidence. Fusion is a normalized visual mixture, not direct ensemble-score Grad-CAM. No retinal images or generated overlays are bundled or sent to Gemini; do not publish them without verifying redistribution terms.
+
 ## Configuration and training settings
 
 `configs/project.yaml` is the central source of truth and replaces the original JSON scaffolds. It sets the three core models, optional baselines, 224×224×3 inputs, batch size 16, seed 42, 70/15/15 splits, classification head, preprocessing, augmentation, checkpoints and early stopping. Stage 1 is 10 epochs at 0.001; stage 2 is 20 epochs at 0.0001 with selective fine-tuning and frozen batch normalization. These settings are not validated hyperparameters.
@@ -215,7 +223,7 @@ Dataset paths resolve relative to the config's project root. Export `DATASET_ROO
 
 `scripts/train_core.py` now supports explicit opt-in core training from a saved session and frozen CSV. Evaluation/export scripts remain disabled. `scripts/prepare_dataset.py` remains a separate preparation entry point and is never called during training. VGG experiments remain optional; only core models are intended for browser export and the application. Use the separate conversion requirements later and validate exact compatibility.
 
-Experimental ensemble weights are intentionally unset in central training configuration; Phase 4 selects and freezes them from actual validation predictions in a separate immutable run artifact. Equal and weighted heatmap fusion are both planned, with the ensemble heatmap as the main web visualization. Do not invent trained weights, thresholds or performance results.
+Experimental ensemble weights are intentionally unset in central training configuration; Phase 4 selects and freezes them from actual validation predictions in a separate immutable run artifact. Equal and weighted heatmap fusion are implemented for private Python analysis; the ensemble heatmap remains the planned main web visualization. Do not invent trained weights, thresholds or performance results.
 
 ## Privacy and reports
 
@@ -225,8 +233,8 @@ Gemini should narrate supplied results without inventing findings, medical advic
 
 ## Validation and next steps
 
-The dataset foundation includes tested patient grouping and preprocessing. Core construction and two-stage training are now implemented; the next research step is deliberate real-data training/evaluation using the frozen manifest. No real-data training occurred during implementation. Evaluate on an untouched test set after selecting thresholds and ensemble weights using validation data. Add browser conversion only after model and preprocessing metadata are stable. Validate probability and Grad-CAM parity before enabling inference or reports.
+The dataset foundation includes tested patient grouping and preprocessing. Core construction and two-stage training are now implemented; individual training and Phase 4 evaluation have completed, and the next private analysis step is running Notebook 06 against the preserved models and saved predictions. No real-data training occurred during implementation. Evaluate on an untouched test set after selecting thresholds and ensemble weights using validation data. Add browser conversion only after model and preprocessing metadata are stable. Validate probability and Grad-CAM parity before enabling inference or reports.
 
-Required future checks include dataset leakage, calibration, sensitivity/specificity and class imbalance, cross-dataset generalization, quality thresholds, browser memory/latency, tensor disposal, payload privacy/consent, and local PDF behavior. Individual Grad-CAM target layers, TF.js gradient support and heatmap fusion require architecture-specific validation; ordinary model conversion alone does not guarantee usable browser Grad-CAM.
+Required future checks include dataset leakage, calibration, sensitivity/specificity and class imbalance, cross-dataset generalization, quality thresholds, browser memory/latency, tensor disposal, payload privacy/consent, and local PDF behavior. Python Grad-CAM target layers and fusion have synthetic architecture-specific tests; real retinal interpretation, TF.js gradient support and browser parity still require validation; ordinary model conversion alone does not guarantee usable browser Grad-CAM.
 
 Reported validation measurements do not establish clinical validity or deployment readiness. See [research workflow](docs/research-workflow.md) and [architecture](docs/architecture.md).
