@@ -245,3 +245,76 @@ def test_saturated_probabilities_are_valid_grid_candidates():
     np.testing.assert_allclose(list(weights.values()),[1/3]*3)
     result=voting_predictions(np.ones((2,3)),[.1,.2,.7])
     np.testing.assert_allclose(result['weighted_soft_voting']['scores'],[1,1])
+
+
+def test_notebook04_to05_handoff_reuses_predictions_and_preserves_reports(manifest_case,monkeypatch):
+    from glaucoma.evaluation import workflow
+    cfg,path=manifest_case
+    calls=[]
+    monkeypatch.setattr(workflow,'verify_selected_checkpoints',lambda *a,**k:{name:{'source':'synthetic'} for name in MEMBERS})
+    def predict(local,manifest,split,checkpoints,flat_image_root=None,**kwargs):
+        assert split=='validation'
+        calls.append(split)
+        rows=manifest_partition(manifest,local,split)
+        table=rows[['dataset_name','image_id','split','label']].copy()
+        for i,name in enumerate(MEMBERS):table[name]=np.where(table.label.eq(1),.81-i*.1,.19+i*.1)
+        individual={name:table[['dataset_name','image_id','split','label',name]].rename(columns={name:'score'}) for name in MEMBERS}
+        return table,individual,{name:'synthetic-graph' for name in MEMBERS}
+    monkeypatch.setattr(workflow,'predict_partition',predict)
+    optimizer=workflow.optimize_weights
+    def forbidden(*a,**k):raise AssertionError('Wrong notebook responsibility')
+    monkeypatch.setattr(workflow,'optimize_weights',forbidden)
+    model_result=workflow.run_model_validation(cfg,enabled=True)
+    directory=Path(model_result['run_directory'])
+    assert calls==['validation']
+    assert not (directory/'frozen_ensemble.json').exists()
+    assert not (directory/'validation/weight_search.csv').exists()
+    metrics=json.loads((directory/'validation/metrics.json').read_text())
+    assert set(metrics['methods'])==set(MEMBERS)
+    originals={p:p.read_bytes() for p in (directory/'validation').rglob('*') if p.is_file()}
+    cached,_=workflow.load_saved_validation(cfg,directory,path)
+    assert cached.image_id.tolist()==['002','003']
+    with pytest.raises(FileNotFoundError,match='Freeze'):workflow.run_final_test(cfg,enabled=True)
+    monkeypatch.setattr(workflow,'optimize_weights',optimizer)
+    monkeypatch.setattr(workflow,'predict_partition',forbidden)
+    monkeypatch.setattr(workflow,'verify_selected_checkpoints',forbidden)
+    ensemble_result=workflow.run_ensemble_validation(cfg,enabled=True)
+    assert calls==['validation']
+    assert Path(ensemble_result['frozen_ensemble']).is_file()
+    assert not (directory/'test_started.json').exists()
+    assert all(p.read_bytes()==data for p,data in originals.items())
+    ensemble_metrics=json.loads((directory/'validation/ensemble/metrics.json').read_text())
+    assert set(ensemble_metrics['methods'])=={*MEMBERS,'majority_voting','equal_soft_voting','weighted_soft_voting'}
+    source=directory/f'validation/individual_predictions/{MEMBERS[0]}.csv'
+    source.write_bytes(source.read_bytes()+b'\n')
+    with pytest.raises(ValueError,match='modified'):workflow.load_frozen(directory)
+
+
+def test_notebook05_requires_notebook04_outputs_and_opt_in(manifest_case):
+    from glaucoma.evaluation.workflow import run_ensemble_validation,run_model_validation
+    cfg,_=manifest_case
+    with pytest.raises(PermissionError):run_model_validation(cfg)
+    with pytest.raises(PermissionError):run_ensemble_validation(cfg)
+    with pytest.raises(FileNotFoundError,match='Notebook 04'):run_ensemble_validation(cfg,enabled=True)
+
+
+def test_readonly_kaggle_handoff_copies_only_before_ensemble_search(manifest_case,monkeypatch,tmp_path):
+    from glaucoma.evaluation import workflow
+    cfg,path=manifest_case
+    monkeypatch.setattr(workflow,'verify_selected_checkpoints',lambda *a,**k:{name:{'source':'synthetic'} for name in MEMBERS})
+    def predict(local,manifest,split,checkpoints,flat_image_root=None,**kwargs):
+        rows=manifest_partition(manifest,local,split)
+        table=rows[['dataset_name','image_id','split','label']].copy()
+        for name in MEMBERS:table[name]=np.where(table.label.eq(1),.9,.1)
+        individual={name:table[['dataset_name','image_id','split','label',name]].rename(columns={name:'score'}) for name in MEMBERS}
+        return table,individual,{name:'synthetic' for name in MEMBERS}
+    monkeypatch.setattr(workflow,'predict_partition',predict)
+    source=Path(workflow.run_model_validation(cfg,enabled=True)['run_directory'])
+    before={p.relative_to(source):p.read_bytes() for p in source.rglob('*') if p.is_file()}
+    target=tmp_path/'writable-phase5'
+    workflow.copy_model_validation(source,target)
+    assert {p.relative_to(target):p.read_bytes() for p in target.rglob('*') if p.is_file()}==before
+    assert {p.relative_to(source):p.read_bytes() for p in source.rglob('*') if p.is_file()}==before
+    with pytest.raises(FileExistsError):workflow.copy_model_validation(source,target)
+    (source/'test_started.json').write_text('{}')
+    with pytest.raises(ValueError,match='pre-ensemble'):workflow.copy_model_validation(source,tmp_path/'another-run')

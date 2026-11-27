@@ -74,21 +74,40 @@ def test_training_notebook_defaults_do_not_construct_or_fit(tmp_path, monkeypatc
     assert namespace['model'] is None and not namespace['RUN_STAGE1'] and not namespace['RUN_STAGE2']
 
 
-def test_phase4_notebook_default_has_no_checkpoint_or_prediction_calls(tmp_path,monkeypatch):
+@pytest.mark.parametrize('filename,flags', [
+    ('04_model_evaluation.ipynb', ('RUN_PLATFORM_SETUP','CLONE_REPOSITORY','INSTALL_DEPENDENCIES','VERIFY_CHECKPOINTS','RUN_MODEL_VALIDATION','SHOW_SAVED_TABLES')),
+    ('05_ensemble_optimization.ipynb', ('RUN_PLATFORM_SETUP','CLONE_REPOSITORY','INSTALL_DEPENDENCIES','RUN_ENSEMBLE_LEARNING','RUN_FINAL_TEST','COPY_VALIDATION_HANDOFF','SHOW_SAVED_TABLES')),
+])
+def test_phase4_notebook_default_has_no_checkpoint_or_prediction_calls(tmp_path,monkeypatch,filename,flags):
     from glaucoma.evaluation import workflow,checkpoints
     def forbidden(*args,**kwargs):
         raise AssertionError('Phase 4 notebook defaults must not load checkpoints or infer')
-    for name in ('run_validation','run_final_test'):
+    for name in ('run_model_validation','run_ensemble_validation','run_validation','run_final_test','copy_model_validation','load_saved_validation'):
         monkeypatch.setattr(workflow,name,forbidden)
     monkeypatch.setattr(checkpoints,'verify_selected_checkpoints',forbidden)
     cfg=configure_workspace(ROOT/'configs/project.yaml',tmp_path/'missing-data',tmp_path/'drive')
     session=save_session(cfg,tmp_path/'drive/session.json')
     monkeypatch.setenv('GLAUCOMA_SESSION',str(session))
-    notebook=json.loads((ROOT/'notebooks/04_model_evaluation.ipynb').read_text())
+    notebook=json.loads((ROOT/'notebooks'/filename).read_text())
     namespace={}
     before=set(tmp_path.rglob('*'))
     for cell in notebook['cells']:
-        if cell['cell_type']=='code':exec(compile(''.join(cell['source']),'04_model_evaluation','exec'),namespace)
+        if cell['cell_type']=='code':exec(compile(''.join(cell['source']),filename,'exec'),namespace)
     assert set(tmp_path.rglob('*'))==before
-    for key in ('RUN_PLATFORM_SETUP','CLONE_REPOSITORY','INSTALL_DEPENDENCIES','VERIFY_CHECKPOINTS','RUN_VALIDATION','RUN_FINAL_TEST','SHOW_SAVED_TABLES'):
-        assert namespace[key] is False
+    assert all(namespace[key] is False for key in flags)
+
+
+def test_phase4_notebook_responsibilities_are_separate():
+    calls={}
+    for prefix in ('04_model_evaluation','05_ensemble_optimization'):
+        notebook=json.loads((ROOT/'notebooks'/f'{prefix}.ipynb').read_text())
+        names=set()
+        for cell in notebook['cells']:
+            if cell['cell_type']=='code':
+                tree=ast.parse(''.join(cell['source']))
+                names.update(node.func.id for node in ast.walk(tree) if isinstance(node,ast.Call) and isinstance(node.func,ast.Name))
+        calls[prefix]=names
+    assert 'run_model_validation' in calls['04_model_evaluation']
+    assert not {'run_ensemble_validation','run_final_test','optimize_weights','freeze_validation','run_validation'} & calls['04_model_evaluation']
+    assert {'run_ensemble_validation','run_final_test','load_saved_validation'} <= calls['05_ensemble_optimization']
+    assert not {'run_model_validation','predict_partition','build_model','run_validation'} & calls['05_ensemble_optimization']
